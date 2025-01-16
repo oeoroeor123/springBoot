@@ -1,9 +1,12 @@
+# YAML 파일 : 콜론(:)과 공백 들여쓰기 2칸을 이용해 계층 구조를 나타냄
+# YAML 파일과 프로퍼티 파일을 함께 사용하면 YAML 파일의 설정을 프로퍼티 파일이 덮어씀
+# 각 요소들이 구분될 때 마다 :를 붙임, 마지막 요소는 :' '(띄어쓰기 필수), 각 요소 공통 사항은 맨 앞에 한 번만 붙임
 spring:
   application:
-    name: 01_board
+    name: 01_mybatis_interface
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver    
-      url: jdbc:mysql://127.0.0.1:3306/db_board
+      url: jdbc:mysql://127.0.0.1:3306/db_boot1
       username: greenit
       password: greenit
   sql:
