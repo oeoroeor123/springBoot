@@ -1,0 +1,45 @@
+[ Spring Legacy Project (Spring MVC Project) ]
+사용 버전 : jdk-11
+사용 툴 : sts3
+사용 톰캣 : tomcat9.0(패키지 javax 사용)
+
+[ Spring Boot Project ]
+사용 버전 : jdk-17
+사용 툴 : sts4
+사용 톰캣 : 내장 톰캣(tomcat10 이상: javax 대신 jakarta 사용), 따로 준비 X
+
+* 특징
+- 기존 기술(JSP/Servlet, EJB 등)의 복잡함을 해결한 경량 프레임워크인 스프링 프레임워크가 등장
+- 스프링 프레임워크는 각종 XML 파일을 이용한 환경 설정이 필요
+- 스프링 부트는 이러한 환경 설정을 더 간단한 방식으로 처리할 수 있도록 해줌
+(application.properties 또는 application.yaml 파일로 대부분의 환경 설정을 해결할 수 있음)
+- 스프링 부트는 대부분의 XML 파일을 지원하지 않음 (web.xml, root-context.xml, servlet-context.xml 등 모두 존재 X)
+- 내장 톰캣을 사용하기 때문에 간편하게 배포할 수 있음 (war가 아닌 jar로 배포 가능)
+- JSP를 지원하지 않음 (Thymeleaf 템플릿 엔진 활용한 html 사용)
+- 스프링 부트 디펜던시를 제공함 (기존 디펜던시들을 모아 놓은 디펜던시)
+
+* src/main/resources 폴더
+static = 스프링의 assets(image, js, css 등 정적 파일 저장소)
+templates = html (jsp 대신 사용하는 html 파일 저장소)
+xml 파일 저장소
+
+* Spring Boot Starter Dependency (스프링 부트 프로젝트 신규 생성 시, 선택해야 할 기본 디펜던시 6가지)
+1. Spring Web
+    ㄴ spring boot starter web
+        ㄴ spring boot starter (spring core, logback core, slf4j api, spring boot)
+        ㄴ spring boot starter json (jackson databind)
+        ㄴ spring webmvc (spring aop, spring context)
+     ㄴ spring boot start tomcat (내장 톰캣_스프링 디펜던시를 설치하면 함께 딸려 들어옴)
+     ㄴ spring boot start test (junit jupiter(5), assertj core, spring boot test)
+2. lombok
+3. MySQL Driver
+4. MyBatis Framework
+5. Thymeleaf
+6. Spring Boot DevTools
+
+* Boot Starter Dependency 외 다른 디펜던시를 사용하고 싶다면, https://mvnrepository.com/에서 가져오기
+* spring boot에서는 입력한 Dependency에 대한 설정이 되지 않은 것들이 있으면 동작 불가
+
+* spring boot mybatis 사용법
+1. 인터페이스에는 추상 메소드 이름만 부름
+2. mapper에 동작하고자하는 인터페이스를 namespace로 작성하고, select id에 메소드 이름을 지정함
