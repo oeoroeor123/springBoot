@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="ApplicationTests.board_delete_테스트" project="01_board" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="com.min.app01.ApplicationTests" time="0.894" displayname="ApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]">
-    <testcase name="board_delete_테스트" classname="com.min.app01.ApplicationTests" time="0.894" displayname="board_delete_테스트()" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]/[method:board_delete_테스트()]"/>
-  </testsuite>
-</testrun>

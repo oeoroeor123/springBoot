@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: 01_board
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver    
+      url: jdbc:mysql://127.0.0.1:3306/db_board
+      username: greenit
+      password: greenit
+  sql:
+   init:
+     mode: always
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  
+
+    
+ 
+            
+
