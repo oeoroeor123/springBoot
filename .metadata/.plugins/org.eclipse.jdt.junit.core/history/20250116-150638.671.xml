@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ApplicationTests.board_insert_테스트" project="01_board" tests="1" started="1" failures="1" errors="0" ignored="0">
+  <testsuite name="com.min.app01.ApplicationTests" time="1.012" displayname="ApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]">
+    <testcase name="board_insert_테스트" classname="com.min.app01.ApplicationTests" time="1.012" displayname="board_insert_테스트()" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]/[method:board_insert_테스트()]">
+      <failure>
+        <expected>2</expected>
+        <actual>1</actual>
+        org.opentest4j.AssertionFailedError: expected: &lt;2&gt; but was: &lt;1&gt;&#13;
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)&#13;
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)&#13;
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)&#13;
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)&#13;
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)&#13;
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)&#13;
+	at com.min.app01.ApplicationTests.board_insert_테스트(ApplicationTests.java:38)&#13;
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+&#13;
+
+      </failure>
+    </testcase>
+  </testsuite>
+</testrun>

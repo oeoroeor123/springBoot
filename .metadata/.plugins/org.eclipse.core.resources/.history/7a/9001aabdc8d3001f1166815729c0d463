@@ -1,0 +1,7 @@
+package com.min.app01.mapper;
+
+public interface IBoardMapper {
+
+  
+  String now();
+}

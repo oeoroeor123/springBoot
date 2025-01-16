@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ApplicationTests.board_insert_테스트" project="01_board" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testsuite name="com.min.app01.ApplicationTests" time="1.072" displayname="ApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]">
+    <testcase name="board_insert_테스트" classname="com.min.app01.ApplicationTests" time="1.072" displayname="board_insert_테스트()" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]/[method:board_insert_테스트()]">
+      <error>org.springframework.jdbc.BadSqlGrammarException: &#13;
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1&#13;
+### The error may exist in com/min/app01/mapper/IBoardMapper.java (best guess)&#13;
+### The error may involve defaultParameterMap&#13;
+### The error occurred while setting parameters&#13;
+### SQL: INSERT INTO tbl_board VALUES(null, 'title2', 'contents2', NOW()&#13;
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []&#13;
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)&#13;
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)&#13;
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:93)&#13;
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:347)&#13;
+	at jdk.proxy2/jdk.proxy2.$Proxy69.insert(Unknown Source)&#13;
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:224)&#13;
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)&#13;
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141)&#13;
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)&#13;
+	at jdk.proxy2/jdk.proxy2.$Proxy73.insertBoardDto(Unknown Source)&#13;
+	at com.min.app01.ApplicationTests.board_insert_테스트(ApplicationTests.java:38)&#13;
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1&#13;
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)&#13;
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)&#13;
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:912)&#13;
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)&#13;
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)&#13;
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)&#13;
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48)&#13;
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75)&#13;
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)&#13;
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)&#13;
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)&#13;
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)&#13;
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)&#13;
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#13;
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)&#13;
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#13;
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#13;
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:333)&#13;
+	... 10 more&#13;
+&#13;
+</error>
+    </testcase>
+  </testsuite>
+</testrun>

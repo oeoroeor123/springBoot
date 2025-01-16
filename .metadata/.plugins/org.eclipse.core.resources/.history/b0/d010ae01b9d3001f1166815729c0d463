@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 
+  Mapper
+  1. SQL 구문을 작성하는 파일이다.
+  
+  2. 다음 태그를 사용할 수 있다.
+    1) <select>
+    2) <insert>
+    3) <update>
+    4) <delete>
+    
+  3. 모든 태그는 id 속성을 작성한다.
+    1) 동일한 id 속성 값을 가질 수 없음
+    2) SQL 구문과 매핑할 메소드의 이름을 id 속성 값으로 지정하는 것을 권장한다.
+      (1) <select id="selectBoardList">
+      (2) <select id="selectBoardCount">
+      (3) <select id="selectBoardById">
+      (4) <select id="insertBoard">
+      (5) <select id="updateBoard">
+      (6) <select id="deleteBoard">
+    
+  4. SQL 구문으로 전달되는 값이 있는 경우, parameterType 속성을 작성한다. (생략 가능)
+    1) <select parameterType="int">
+    2) <insert parameterType="com.min.app07.dto.BoardDto">
+    3) <update parameterType="com.min.app07.dto.BoardDto">
+    4) <delete parameterType="int">
+    
+  5. SQL 구문의 결과 타입 resultType 속성에 작성한다. <select> 태그만 작성한다. (<insert>, <update>, <delete> 태그는 int로 지정되어있어서 작성 불가)
+    1) List<BoardDto> selectBoardList();
+        <select resultType="com.min.app07.dto.BoardDto"> // my batis에 list 타입은 없음, 전달되는 데이터의 타입을 작성
+        
+    2) int selectBoardCount();
+        <select resultType="int">
+    
+    3) BoardDto selectBoardById(int boardId);
+        <select resultType="com.min.app07.dto.BoardDto">
+-->
+
+<!-- 
+  parameter 처리하는 방법
+  1. #{parameter}
+    1) SQL 구문으로 전달된 파라미터를 PreparedStatement의 Place Holder(?마크) 방식으로 처리한다.
+    2) 작성 방법
+      (1) 파라미터가 여러개인 경우
+          #{param1}, #{param2}, #{param3}, ...
+      (2) 파라미터가 일반 변수인 경우
+          #{변수명}
+      (3) 파라미터가 Map인 경우
+          #{key}
+      (4) 파라미터가 DTO인 경우
+          #{field명}
+          
+  2. ${parameter}
+    1) 문자열 대체 방식 (String Substitution)
+    2) 전달된 파라미터가 따옴표 또는 이스케이프 처리 없이 그대로 SQL 구문에 포함된다.
+    3) SQL 구문의 메타 데이터(테이블 이름, 칼럼 이름, 쿼리문 자체 키워드 등)를 처리할 때 사용한다.
+-->
+
+<!-- 
+  CDATA
+  1. Character Data(문자 데이터)를 의미한다.
+  2. 마크업 언어(xml)에서 마크업으로 해석하지 않고 문자를 그대로 포함하고자 할 때 CDATA를 사용한다.
+  3. 형식
+    <![CDATA[ 문자데이터 ]]>
+-->
+
+<!-- 
+  동적쿼리
+  1. if
+    1) 형식
+       <if test="파라미터 조건식"></if>
+
+    2) 예시
+       <if test="title != null"></if>
+       <if test="title != ''"></if>
+       <if test="userDto.usrId != 0"></if>
+       
+  2. foreach
+    1) 형식
+      <foreach collection="array / list / key(Map의 key 값) / field(일반 객체)" item="요소" open="시작구문" close="종료구문" separator="구분자" index="인덱스" nullable=true / false>
+        #{요소} > 위 item에 적어준 요소를 적기
+      </foreach>
+
+    2) 예시
+      (1) 파라미터가 배열인 경우 ::: String[] flowers = {"모란", "백합", "국화"};
+        <foreach collection="array" item="flower" open="NAME IN (" close=")" separator=",">
+          #{flower}
+        </foreach>
+        ** 결과 : NAME IN ('모란', '백합', '국화')
+        
+      (2) 파라미터가 List인 경우 ::: List<String> flowers = Arrays.asList("모란", "백합", "국화"); ]
+        <foreach collection="list" item="flower" open="(" close=")" separator=",">
+          #{flower}
+        </foreach>
+        ** 결과 : ('모란', '백합', '국화')
+        
+      (3) 파라미터가 배열 또는 리스트를 가진 Map인 경우 ::: Map<String, Object> map = Map.of("flowers", Arrays.asList("모란", "백합", "국화")); ]
+        <foreach collection="flowers" item="flower" separator=",">
+          #{flower}
+        </foreach>
+        ** 결과 : '모란', '백합', '국화'
+-->
+
+
+<mapper namespace="mybatis.mappers.boardMapper"> <!-- 확장자가 들어가지 않아 / 가 아닌 . 로 경로 작성함, 경로로 작성 -->
+  
+  <!-- BoardDto의 구조를 이용해 BoardMap을 만든다. -->
+  
+  <!-- BoardDto을 반환하지 않고, BoardMap을 반환한다. -->
+  <!-- 따라서, 반환 타입은 ResultType 대신 ResultMap을 이용해 반환한다. -->
+  <!-- id : pk 키, result : 일반 칼럼 -->
+  <!-- column : 쿼리문의 칼럼 명, property : DTO의 필드 명 -->
+  
+  <resultMap type="BoardDto" id="BoardMap">
+    <id column="board_id" property="boardId"/>
+    <result column="title" property="title"/>
+    <result column="contents" property="contents"/>
+    <result column="create_dt" property="createDt"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="usr_id" property="usrId"/>
+      <result column="usr_email" property="usrEmail"/>
+      <result column="usr_name" property="usrName"/>
+    </association>
+  </resultMap>
+   
+  <select id="selectBoardList" parameterType="String" resultMap="BoardMap"> <!-- resultType > resultMap으로 반환 타입 변경 -->
+    SELECT
+            board_id
+          , title
+          , contents
+          , create_dt
+          , b.usr_id
+          , usr_email
+          , usr_name  
+      FROM
+            tbl_board b INNER JOIN tbl_user u
+        ON 
+            b.usr_id = u.usr_id
+      ORDER BY
+            board_id ${sort} 
+  </select>
+  
+  <select id="selectBoardCount" resultType="int">
+    SELECT
+           count(*)
+      FROM
+           tbl_board  
+  </select>
+  
+  <select id="selectBoardById" parameterType="int" resultMap="BoardMap">
+  <!-- 파라미터 값도 있고, select 문이라 resultType도 작성해야 함 -->
+    SELECT
+            board_id
+          , title
+          , contents
+          , create_dt
+          , b.usr_id
+          , usr_email
+          , usr_name
+      FROM
+            tbl_board b INNER JOIN tbl_user u
+        ON
+            b.usr_id = u.usr_id
+     WHERE
+            board_id = #{boardId}
+  </select>
+  
+  
+  <select id="selectBoardSearchList" parameterType="Map" resultMap="BoardMap">    
+    SELECT
+            board_id
+          , title
+          , contents
+          , create_dt
+          , b.usr_id
+          , usr_email
+          , usr_name
+      FROM
+            tbl_board b INNER JOIN tbl_user u
+        ON
+            b.usr_id = u.usr_id
+     WHERE
+            ${column} LIKE CONCAT ('%', #{query}, '%') <!-- key 값 LIKE CONCAT 앞뒤로 만능문자 연결(연산자 : = 대신 LIKE로 비교) -->
+  </select>
+  
+  <select id="selectBoardPeriodList" parameterType="Map" resultMap="BoardMap">
+     SELECT
+            board_id
+          , title
+          , contents
+          , create_dt
+          , b.usr_id
+          , usr_email
+          , usr_name
+      FROM
+            tbl_board b INNER JOIN tbl_user u
+        ON
+            b.usr_id = u.usr_id
+     WHERE
+            Date(create_dt) >= #{beginDt} AND Date(create_dt) <![CDATA[<=]]> #{endDt}
+  </select>
+  
+  <select id="selectBoardIntegratedSearch" parameterType="Map" resultMap="BoardMap">
+    SELECT
+           board_id
+         , title
+         , contents
+         , create_dt
+         , b.usr_id
+         , usr_email
+         , usr_name
+      FROM
+           tbl_board b INNER JOIN tbl_user u
+        ON
+           b.usr_id = u.usr_id
+     <where> <!-- WHERE 절 대신 <where> 태그를 사용하면 조건식이 AND, OR로 시작하는 경우 이를 제외하고 작동한다. -->
+     <if test="title != ''">
+           title LIKE CONCAT('%', #{query}, '%')     
+     </if>
+     <if test="usrEmail != ''">
+       AND usr_email LIKE CONCAT('%', #{usrEmail}, '%')    
+     </if>
+     <if test="usrName != ''">
+       AND usr_name LIKE CONCAT('%', #{usrName}, '%')     
+     </if>
+     <if test="beginDt != '' and endDt != ''">
+       AND DATE(create_dt) BETWEEN #{beginDt} AND #{endDt}     
+     </if>
+     </where> 
+  </select>
+  
+  <select id="selectBoardIntegratedSearchCount" parameterType="Map" resultType="int">
+    SELECT
+           COUNT(*)
+      FROM
+           tbl_board b INNER JOIN tbl_user u
+        ON
+           b.usr_id = u.usr_id
+    <where> 
+     <if test="title != ''">
+           title LIKE CONCAT('%', #{query}, '%')     
+     </if>
+     <if test="usrEmail != ''">
+       AND usr_email LIKE CONCAT('%', #{usrEmail}, '%')    
+     </if>
+     <if test="usrName != ''">
+       AND usr_name LIKE CONCAT('%', #{usrName}, '%')     
+     </if>
+     <if test="beginDt != '' and endDt != ''">
+       AND DATE(create_dt) BETWEEN #{beginDt} AND #{endDt}     
+     </if>
+    </where>
+    
+  </select>
+  
+
+  <insert id="insertBoard" parameterType="BoardDto">
+    INSERT INTO
+      tbl_board
+    VALUES (
+        NULL
+      , #{title}
+      , #{contents}
+      , NOW()
+      , #{userDto.usrId}
+    )
+    <!-- 
+      SELECT LAST_INSER_ID() : 마지막으로 삽입된 PK값을 의미한다. (해당 커넥션에서만 동작하므로, 다수의 사용자가 동시에 다른 커넥션으로 삽입을 요청해도 해당 커넥션에서 삽입한 PK값임을 보장한다.)
+      resultType="int"       : SELECT문의 실행 결과는 int 타입이다.
+      order="AFTER"          : INSERT문이 실행된 이후에 <selectKey> 태그가 동작한다.
+      keyProperty="boardId"  : 마지막으로 삽입된 PK값을 boardId에 저장한다. boardId는 삽입할 정보를 가지고 있는 파라미터에 있다. 
+      
+    -->
+    <selectKey keyProperty="boardId" order="AFTER" resultType="int">
+      SELECT LAST_INSERT_ID()      
+    </selectKey>
+  </insert>
+    
+  <update id="updateBoard" parameterType="BoardDto">
+    UPDATE
+           tbl_board
+       <set> <!-- SET 절 대신 <set> 태그를 사용할 때 콤마(,)로 시작하면 이를 제외하고 동작한다. --> 
+       <if test="title != ''">
+            title = #{title}
+       </if>
+       <if test="contents != null">
+         , contents = #{contents}
+       </if>
+       </set>
+     WHERE
+           board_id = #{boardId}
+  </update>
+  
+  <delete id="deleteBoard" parameterType="int">
+    DELETE
+      FROM
+           tbl_board
+     WHERE
+           board_id = #{boardId}
+  </delete>
+  
+  <delete id="deleteSelectedBoard">
+    DELETE
+      FROM 
+           tbl_board
+     WHERE
+           board_id IN
+    <foreach collection="array" item="number" open="(" close=")" separator=","> <!-- open이나 close 값을 따로 지정하지 않고 위 WHERE 절에 넣어도 됨 -->
+      #{number}
+    </foreach>
+  </delete>
+
+
+</mapper>

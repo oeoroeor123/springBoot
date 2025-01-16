@@ -1,0 +1,16 @@
+spring:
+  application:
+		name: 01_board
+
+	datasource:
+		hikari:
+			driver-class-name: com.mysql.cj.jdbc.Driver
+					
+spring:
+	datasource:
+		hikari:
+			jdbc-url: jdbc:mysql://127.0.0.1:3306/db_board
+					
+ 
+						
+

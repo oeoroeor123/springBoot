@@ -1,0 +1,15 @@
+spring.application.name=01_board
+
+# 데이터베이스 설정
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/db_board
+spring.datasource.username=greenit
+spring.datasource.password=greenit
+
+# 마이바티스 설정
+mybatis.mapper-locations=mybatis/mappers/*.xml
+mybatis.configuration.map-underscore-to-camel-case=true
+mybatis.type-aliases-package=com.min.app01.dto
+
+
+

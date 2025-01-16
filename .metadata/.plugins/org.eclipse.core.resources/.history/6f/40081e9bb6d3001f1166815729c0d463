@@ -1,0 +1,9 @@
+spring.application.name=01_board
+
+spring.datasource.hikari.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.hikari.jdbc-url=jdbc:mysql://127.0.0.1:3306/db_board
+spring.datasource.hikari.username=greenit
+spring.datasource.hikari.password=greenit
+
+mybatis.config-location=mybatis/configuration/mybatis-config.xml
+mybatis.mapper-locations=

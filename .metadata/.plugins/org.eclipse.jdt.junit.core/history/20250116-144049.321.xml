@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ApplicationTests.board_detail_테스트" project="01_board" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="com.min.app01.ApplicationTests" time="1.092" displayname="ApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]">
+    <testcase name="board_detail_테스트" classname="com.min.app01.ApplicationTests" time="1.092" displayname="board_detail_테스트()" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]/[method:board_detail_테스트()]"/>
+  </testsuite>
+</testrun>

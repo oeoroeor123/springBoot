@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: 01_board
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver    
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/db_board
+      username: greenit
+      password: greenit
+
+mybatis:
+  mapper-locations: mybatis/mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    type-aliases-package: com.min.app01.dto
+    
+ 
+            
+

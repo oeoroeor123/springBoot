@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="ApplicationTests.board_insert_테스트" project="01_board" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testsuite name="com.min.app01.ApplicationTests" time="0.951" displayname="ApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]">
+    <testcase name="board_insert_테스트" classname="com.min.app01.ApplicationTests" time="0.951" displayname="board_insert_테스트()" uniqueid="[engine:junit-jupiter]/[class:com.min.app01.ApplicationTests]/[method:board_insert_테스트()]">
+      <error>org.apache.ibatis.binding.BindingException: Mapper method 'com.min.app01.mapper.IBoardMapper.insertBoardDto' has an unsupported return type: class com.min.app01.dto.BoardDto&#13;
+	at org.apache.ibatis.binding.MapperMethod.rowCountResult(MapperMethod.java:118)&#13;
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)&#13;
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:141)&#13;
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)&#13;
+	at jdk.proxy2/jdk.proxy2.$Proxy75.insertBoardDto(Unknown Source)&#13;
+	at com.min.app01.ApplicationTests.board_insert_테스트(ApplicationTests.java:38)&#13;
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)&#13;
+&#13;
+</error>
+    </testcase>
+  </testsuite>
+</testrun>
