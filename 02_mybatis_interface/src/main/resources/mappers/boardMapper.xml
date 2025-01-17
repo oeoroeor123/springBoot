@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 인터페이스 이름으로 지정 -->
+<mapper namespace="com.min.app02.mapper.IBoardMapper">
+  
+	<select id="now" resultType="String">
+		SELECT NOW()
+	</select>
+	
+	<select id="selectBoardList" resultType="BoardDto">
+		SELECT board_id, title, contents, create_dt
+    FROM tbl_board
+    ORDER BY board_id DESC
+	</select>
+  
+  <select id="selectBoardById" resultType="BoardDto">
+    SELECT board_id, title, contents, create_dt
+    FROM tbl_board
+    WHERE board_id = #{boardId}
+  </select>
+    
+  <!-- useGeneratedKeys : 데이터베이스에서 auto_increment로 자동 생성된(boardId) 키를 자동으로 받환 받고 -->
+  <!-- keyProperty : 해당 값을 boardId에 지정 -->    
+  <insert id="insertBoard" useGeneratedKeys="true" keyProperty="boardId">
+    INSERT INTO tbl_board (
+      title
+    , contents
+    , create_dt
+    ) VALUES (
+      #{title}
+    , #{contents}
+    , NOW()
+    )
+  </insert>
+  
+  <update id="updateBoard">
+    UPDATE tbl_board
+    SET title = #{param1}, contents = #{param2}
+    WHERE board_id = #{param3}
+  </update>
+  
+  <delete id="deleteBoard">
+    DELETE FROM tbl_board
+    WHERE board_id = #{boardId}
+  </delete>
+
+</mapper>
