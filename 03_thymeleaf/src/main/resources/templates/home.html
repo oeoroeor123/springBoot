@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--/* 타임리프 주석 */-->
+<!--/* 타임리프의 th 속성 사용을 위한 네임스페이스 (xmlns:th="http://www.thymeleaf.org) */-->
+<!--/* 타임리프의 th 속성은 앞에 th: 를 붙여서 사용함, 해당 코드는 화면단에서 보이지 않음 */-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!--/* 정적 자원 확인하기 (이미지의 주소 입력) */-->
+<link rel="stylesheet" href="/static/css/home1.css">
+
+<!--/* th 속성을 이용한 정적 자원 확인하기, 형식 : <img th:src="@{/경로}"> */-->
+<link rel="stylesheet" th:href="@{/static/css/home2.css}">
+</head>
+<body>
+
+  <!--/* 정적 자원 확인하기 (이미지의 주소 입력) */-->
+  <img src="/static/images/animal10.jpg" class="image">
+  
+  <!--/* th 속성을 이용한 정적 자원 확인하기, 형식 : <img th:src="@{/경로}"> */-->
+  <img th:src="@{/static/images/animal10.jpg}" class="image">
+
+
+  <hr>
+  
+  
+  <a th:href="@{/list.do }">게시판</a>
+
+
+
+</body>
+</html>

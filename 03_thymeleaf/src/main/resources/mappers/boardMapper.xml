@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 인터페이스 이름으로 지정 -->
+<mapper namespace="com.min.app03.mapper.IBoardMapper">
+
+  <select id="selectBoardCount" resultType="int">
+    SELECT COUNT(*)
+      FROM tbl_board    
+  </select>
+  
+  <select id="selectBoardList" resultType="BoardDto">
+    SELECT board_id, title, contents, create_dt
+      FROM tbl_board
+     ORDER BY board_id ${sort}
+     LIMIT #{offset}, #{display}
+  </select>
+  
+  <select id="selectBoardById" resultType="BoardDto">
+    SELECT board_id, title, contents, create_dt
+      FROM tbl_board
+     WHERE board_id = #{boardId}
+  </select>
+  
+  <insert id="insertBoard">
+    INSERT INTO tbl_board (
+      title
+    , contents
+    , create_dt
+    ) VALUES (
+        #{title}
+      , #{contents}
+      ,  NOW()
+      )
+  </insert>
+
+  <update id="updateBoard">
+    UPDATE tbl_board
+       SET title = #{title}
+         , contents = #{contents}
+     WHERE board_id = #{boardId}
+  </update>
+  
+  <delete id="deleteBoard">
+    DELETE
+      FROM tbl_board
+     WHERE board_id = #{boardId}
+  </delete>
+
+</mapper>
