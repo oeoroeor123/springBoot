@@ -45,6 +45,17 @@
        <input th:field="*{필드}">
        <textarea th:text="*{필드}">
       </form>      
+
+4. Fragment Expression
+  1) 조각 만들기
+    ① <태그 th:fragment="조각명"></태그>
+    ② <태그 th:fragment="조각명(매개변수)"></태그>
+  2) 조각으로 바꾸기
+    ① <태그 th:replace="~{파일명::조각명}"></태그>
+    ② <태그 th:replace="~{파일명::조각명(인자)}"></태그>
+  3) 조각을 넣기
+    ① <태그 th:insert="~{파일명::조각명}"></태그>
+    ② <태그 th:insert="~{파일명::조각명(인자)}"></태그>
       
       
 * 타임리프 주요 제어문
@@ -93,6 +104,35 @@
     ② ${#dates.year(date)}                : 년도 반환
     ③ ${#dates.month(date)}             : 월 반환(1~12)
     ④ ${#dates.day(date)}                 : 일 반환(1~31)
-    (5) ${#dates.hour(date)}               : 시 반환(0~23)
-    (6) ${#dates.minute(date)}            : 분 반환(0~59)
-    (7) ${#dates.second(date)}            : 초 반환(0~59)
+    ⑤ ${#dates.hour(date)}               : 시 반환(0~23)
+    ⑥ ${#dates.minute(date)}            : 분 반환(0~59)
+    ⑦ ${#dates.second(date)}            : 초 반환(0~59)
+
+4. #strings
+  1) java.lang.String 을 의미합니다.
+  2) 주요 사용법
+    (1) ${#strings.toString(obj)}               : obj를 문자열로 반환
+    (2) ${#strings.isEmpty(text)}               : text가 빈 문자열 또는 null이면 true 반환
+    (3) ${#strings.length(text)}}               : text의 길이 반환
+    (4) ${#strings.defaultString(text,default)} : text가 빈 문자열 또는 null이면 default 반환
+    (5) ${#strings.contains(text,substr)}       : text가 substr을 포함하면 true 반환
+    (6) ${#strings.startsWith(text,substr)}     : text가 substr으로 시작하면 true 반환
+    (7) ${#strings.endsWith(text,substr)}       : text가 substr으로 끝나면 true 반환
+    (8) ${#strings.indexOf(text,substr)}        : text에 포함된 substr의 인덱스 반환 
+    (9) ${#strings.substring(text,begin,end)}   : text의 인덱스 begin부터 end 이전까지 문자열 반환
+   (10) ${#strings.replace(text,old,new)}       : text의 old를 new로 변경한 결과 반환
+   (11) ${#strings.toUpperCase(text)}           : text를 모두 대문자로 변경한 결과 반환
+   (12) ${#strings.toLowerCase(text)}           : text를 모두 소문자로 변경한 결과 반환
+   (13) ${#strings.trim(text)}                  : text의 좌우 공백 제거 결과 반환
+   (14) ${#strings.abbreviate(text,n)}          : text를 최대 n 만큼만 표시하고 ... 붙인 결과 반환
+   (15) ${#strings.arrayJoin(array,text)}       : array의 각 요소 사이에 text를 넣어 연결한 문자열 반환
+
+5. #numbers
+  1) 숫자를 다룹니다.
+  2) 주요 사용법
+    (1) ${#numbers.formatInteger(num,n)}                   : 정수 num을 최소 n 자리로 표시. 부족한 자리는 0을 표시
+    (2) ${#numbers.formatInteger(num,n,'COMMA')}           : 정수 num을 최소 n 자리로 표시. 천 단위 구분기호로 콤마(,) 사용
+    (3) ${#numbers.formatDecimal(num,int,decimal)}         : 실수 num의 정수부를 최소 int 자리로 표시. 소수부를 최소 decimal 자리로 표시
+    (4) ${#numbers.formatDecimal(num,int,decimal,'COMMA')} : 실수 num의 정수부를 최소 int 자리로 표시. 소수부를 최소 decimal 자리로 표시. 천 단위 구분기호로 콤마(,) 사용
+    (5) ${#numbers.sequence(from,to)}                      : from ~ to 사이 모든 정수 값을 가지는 시퀀스(배열) 반환
+    (6) ${#numbers.sequence(from,to,step)}                 : from ~ to 사이 step 간격의 정수 값을 가지는 시퀀스(배열) 반환
