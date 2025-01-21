@@ -1,8 +1,8 @@
-package com.min.app03.service;
+package com.min.app04.service;
 
 import java.util.Map;
 
-import com.min.app03.dto.BoardDto;
+import com.min.app04.dto.BoardDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 

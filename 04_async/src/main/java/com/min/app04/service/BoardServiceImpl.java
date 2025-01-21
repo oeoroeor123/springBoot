@@ -1,4 +1,4 @@
-package com.min.app03.service;
+package com.min.app04.service;
 
 import java.util.List;
 import java.util.Map;
@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.min.app03.dto.BoardDto;
-import com.min.app03.mapper.IBoardMapper;
-import com.min.app03.util.PageUtil;
+import com.min.app04.dto.BoardDto;
+import com.min.app04.mapper.IBoardMapper;
+import com.min.app04.util.PageUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -80,26 +80,26 @@ public class BoardServiceImpl implements IBoardService {
     } catch (Exception e) {
       e.printStackTrace();
       mapping = "/write.do";
-      msg = "서버 오류 발생";
+      msg = "등록 실패";
     }
     return Map.of("mapping", mapping, "msg", msg);
   }
 
-  @Override
-  public Map<String, String> modifyBoard(BoardDto boardDto) {
-    String mapping = null;
-    String msg = null;
-    try {
-      boardMapper.updateBoard(boardDto);
-      mapping = "/list.do";
-      msg = "수정 성공";
-    } catch (Exception e) {
-      e.printStackTrace();
-      mapping = "/edit.do?boardId=" + boardDto.getBoardId();
-      msg = "수정 실패";
-    }
-    return Map.of("mapping", mapping, "msg", msg);
+@Override
+public Map<String, String> modifyBoard(BoardDto boardDto) {
+  String mapping = null;
+  String msg = null;
+  try {
+    boardMapper.updateBoard(boardDto);
+    mapping = "/list.do";
+    msg = "수정 성공";
+  } catch (Exception e) {
+    e.printStackTrace();
+    mapping = "/modify.do";
+    msg = "수정 실패";
   }
+  return Map.of("mapping", mapping, "msg", msg);
+}
 
   @Override
   public String removeBoard(int boardId) {

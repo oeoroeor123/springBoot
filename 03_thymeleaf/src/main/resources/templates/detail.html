@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<head th:replace="~{home::head-frag('게시글 상세')}"></head>
 <body>
 
   <div th:text="|${board.boardId}번 게시글|"></div>
@@ -14,18 +11,35 @@
   <div>
   <button type="button" id="btn-edit">편집</button>
   </div>
+ 
+  <div>
+  <button type="button" id="btn-remove">삭제</button>
+  </div>
+
+  <!--/* home.html의 footer-frag 조각을 가져와서 <div>태그에 넣기(insert) */-->
+  <div th:insert="~{home::footer-frag}"></div>
   
   <!--/* 타임리프의 자바스크립트 인라인 문법 사용 */-->
   <!--/* 자바스크립트에서 자바 변수 처리를 위한 텍스트 렌더링 : [[${}]] */-->
   <!--/* 자바스크립트 Natural Template : 주석으로 텍스트 렌더링(/*[[${}]]*/) 후, 디폴트값을 부여(값이 존재하면 렌더링 값을 쓰고, 없으면 디폴트 값을 써라.) */-->
   <script th:inline="javascript">
+  const boardId = /*[[${board.boardId}]]*/0; // ${board.boardId} 값이 있으면 쓰고, 없으면 0을 사용한다. 
   
   function btnEditClickHandler() {
   	  document.getElementById('btn-edit').addEventListener('click', (event) => {
-  	    const boardId = /*[[${board.boardId}]]*/0; // ${board.boardId} 값이 있으면 쓰고, 없으면 0을 사용한다. 
   	    location.href = '/edit.do?boardId=' + boardId;
   	  })
-  	}
+  	}  
+  
+  
+  function btnRemoveClickHandler() {
+    document.getElementById('btn-remove').addEventListener('click', (event) => {
+      if(confirm('현재 게시글을 삭제할까요?')) {
+        location.href = '/remove.do?boardId=' + boardId;
+      }
+    })
+  }
+  
   
   function msgHandle() {
 	  const msg = /*[[${msg}]]*/ null;
@@ -34,6 +48,7 @@
 	}
   
   	btnEditClickHandler();
+  	btnRemoveClickHandler();
 		msgHandle();
   
   </script>

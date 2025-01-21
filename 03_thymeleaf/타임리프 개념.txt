@@ -30,20 +30,29 @@
 
 2. Value Expression
    1) 값을 나타날 때 사용
-   2) 형식(Spring el) : ${}
+   2) 형식 : ${}
    3) 영역 구분
     ① 세션에 저장된 값 : ${session.값}
     ② 애플리케이션에 저장된 값 : ${application.값}
    4) th 속성
     ① th:text="${텍스트}"
     ② th:utext="${HTML요소}"
-    
+
+3. Selection Variable Expression
+   1) 객체와 필드를 구분해서 작성할 때 사용
+   2) 형식
+      <form th:object="${객체}">
+       <input th:field="*{필드}">
+       <textarea th:text="*{필드}">
+      </form>      
+      
+      
 * 타임리프 주요 제어문
 1. 분기문
   1) if
   2) 형식
     ① <태그 th:if="${조건식}"></태그>
-    ② <th:block th:if="${조건식"></th:block>
+    ② <th:block th:if="${조건식}"></th:block>
   3) else
   4) 형식
     ① <태그 th:unless="${조건식}"></태그>

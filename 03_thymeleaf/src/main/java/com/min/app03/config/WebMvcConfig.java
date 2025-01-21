@@ -18,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     
     registry.addResourceHandler("/static/**")  // 주소
             .addResourceLocations("classpath:/static/"); // 디렉터리
-    
   }
+ 
+  
 }

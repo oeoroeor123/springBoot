@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{home::head-frag('게시글 수정')}"></head>
+<body>
+
+  <form th:action="@{/modify.do}" method="post" th:object="${board}">
+    <input type="hidden" name="boardId" th:field="*{boardId}">
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" th:field="*{title}">
+    <br/>
+    <label for="contents">내용</label><br/>
+    <textarea id="contents" name="contents" th:text="*{contents}"></textarea>
+    <br/>
+    <button type="submit" id="btn-modify">수정</button>
+  </form>
+  
+  <!--/* home.html의 footer-frag 조각을 가져와서 <div>태그에 넣기(insert) */-->
+  <div th:insert="~{home::footer-frag}"></div>
+
+  <!--/* 자바스크립트 인라인 사용 */-->
+  <script th:inline="javascript">
+    
+    function msgHandle() {
+      const msg = /*[[${msg}]]*/ null;
+      if(msg != null)
+        alert(msg);
+    }
+    
+    msgHandle();
+   
+    </script>
+
+</body>
+</html>

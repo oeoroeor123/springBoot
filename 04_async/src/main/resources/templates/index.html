@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <div>
+  <button type="button" id="btn-list">JSON목록 가져오기</button>
+  <button type="button" id="btn-list2">XML목록 가져오기</button>
+  </div>
+  
+  <script th:inline="javascript">
+  
+  
+  async function getBoardList() {
+     const response = await fetch('/board/list.json');
+     const jsonData = await response.json();
+     console.log(jsonData);
+  }
+  
+  async function getBoardListXml() {
+    const response = await fetch('/board/list.xml');
+    const resData = await response.text();
+    const xmlData = new DOMParser().parseFromString(resData, 'application/xml');
+    console.log(xmlData);
+  }
+  
+    document.getElementById('btn-list').addEventListener('click', getBoardList);
+    document.getElementById('btn-list2').addEventListener('click', getBoardListXml);
+  
+  </script>
+  
+</body>
+</html>

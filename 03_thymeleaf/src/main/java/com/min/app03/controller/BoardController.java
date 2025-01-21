@@ -52,8 +52,9 @@ public class BoardController {
   
   @PostMapping("/regist.do")
   public String regist(BoardDto boardDto, RedirectAttributes redirectAttributes) {
-    redirectAttributes.addFlashAttribute("msg", boardService.registBoard(boardDto));
-    return "redirect:/list.do";
+    Map<String, String> map = boardService.registBoard(boardDto);
+    redirectAttributes.addFlashAttribute("msg", map.get("msg"));
+    return "redirect:" + map.get("mapping");
   }
   
   @GetMapping("/edit.do")
@@ -61,17 +62,19 @@ public class BoardController {
     model.addAttribute("board", boardService.getBoardById(boardId));
     return "edit";
   }
-    
+  
   @PostMapping("/modify.do")
   public String modify(BoardDto boardDto, RedirectAttributes redirectAttributes) {
-    redirectAttributes.addFlashAttribute("msg", boardService.modifyBoard(boardDto));
-    return "redirect:/detail.do?boardId=" + boardDto.getBoardId();
+    Map<String, String> map = boardService.modifyBoard(boardDto);
+    redirectAttributes.addFlashAttribute("msg", map.get("msg"));
+    return "redirect:" + map.get("mapping");
   }
   
-  @GetMapping("remove.do")
-  public String remove(@RequestParam int boardId, RedirectAttributes redirectAttributes) {
+  @GetMapping("/remove.do")
+  public String remove(int boardId, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("msg", boardService.removeBoard(boardId));
     return "redirect:/list.do";
   }
+  
   
 }

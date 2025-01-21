@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+
+<!--/* home.html의 head-frag 조각을 가져와서 <head>태그를 바꾸기 th:replace="~{파일명::조각명}, title 전달하기 */-->
+<head th:replace="~{home::head-frag('게시글목록')}"></head>
 <body>
   
   <!--/* 문자열은 작은 따옴표로 묶고, Value Expression은 + 기호로 연결 */-->
@@ -11,6 +10,18 @@
   
   <!--/* 텍스트 데이터를 파이프(|)로 묶어 주면, 문자열의 작은따옴표와 연결 연산자 + 생략 가능 */-->
   <div th:text="|전체 게시글 개수 ${count}개|"></div>
+  
+  <!--/* 정렬 : 최신순 | 과거순 */-->
+  <a th:href="@{/list.do?page=1&sort=DESC}">최신순</a>
+  <a th:href="@{/list.do?page=1&sort=ASC}">과거순</a>
+  
+  <br/>
+  
+  <!--/* 화면에 표시할 목록 : 20개 | 50개 */-->
+  <a th:href="@{/list.do?display=20}">20개 보기</a>
+  <a th:href="@{/list.do?display=50}">50개 보기</a>
+  
+  
   <!--/* html 마크업 요소가 포함된 텍스트는 th:utext로 작성, 페이징 처리 */-->
   <div th:utext="${paging}"></div>
   
@@ -21,13 +32,20 @@
   
   <!--/* boardList가 비어 있지 않다면(unless), boardList 하나씩 꺼내서 보여주기 */-->
   <div th:unless="${#lists.isEmpty(boardList)}">
-    <div th:each="b,rowStat:${boardList}">
-      <span th:text="${offset + rowStat.count}"></span>
+    <div th:each="b, rowStat:${boardList}">
+      <span th:text="${offset + rowStat.count}"></span> <!--/* 순번 표시 : offset + rowStat.count(index + 1) */-->
       <!--/*경로 표기법 : @{} 작성 시 경로와 요청 파라미터는 괄호()로 구분하여 작성 */-->
       <a th:href="@{/detail.do(boardId=${b.boardId})}" th:text="${b.title}"></a>
       <span th:text="${#dates.format(b.createDt, 'yyyy-mm-dd')}"></span>
     </div>
   </div>
+  
+  
+  <a th:href="@{/write.do}">게시글 작성</a>
+  
+  
+  <!--/* home.html의 footer-frag 조각을 가져와서 <div>태그에 넣기(insert) */-->
+  <div th:insert="~{home::footer-frag}"></div>  
   
   <!--/* 자바스크립트 인라인 사용 */-->
   <script th:inline="javascript">
