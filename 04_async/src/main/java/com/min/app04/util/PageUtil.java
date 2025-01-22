@@ -102,5 +102,62 @@ public class PageUtil {
     return builder.toString();
     
   }
+ 
+  /**
+   * 비동기 처리에서 사용할 자바스크립트 페이징 함수 호출을 제공하는 메소드
+   * @param params  요청 주소에 추가할 파라미터
+   * @return  문자열 형식의 페이징 함수 호출
+   */
+  public String getAsyncPaging(Map<String, Object> params) {
+       
+    String queryString = "";
+    for(Map.Entry<String, Object> entry : params.entrySet())
+      queryString += "&" + entry.getKey() + "=" + entry.getValue();
+    
+    StringBuilder builder = new StringBuilder();
+    
+    // <style></style>
+    builder.append("<style>");
+    builder.append(".paging { display: flex; justify-content: center; width: 400px; margin: 0 auto; }");
+    builder.append(".paging button { display: block; border: none; background-color: #fff; text-align: center; width: 30px; height: 30px; line-height: 30px; cursor: pointer; }");
+    builder.append(".paging .disabled-button { color: silver; cursor: auto; }");
+    builder.append(".paging .focus-page { color: limegreen; }");
+    builder.append("</style>");
+    
+    // <div class="paging">
+    builder.append("<div class=\"paging\">");
+    
+    // 이전 블록 <
+    // 1. 링크 없음 : <button type="button" class="disabled-button">&lt;</button>
+    // 2. 링크 있음 : <button type="button" onclick="fnPaging(10, '&sort=DESC')">&lt;</button>
+    if(beginPage == 1)
+      builder.append("<button type=\"button\" class=\"disabled-button\">&lt;</button>");
+    else
+      builder.append("<button type=\"button\" onclick=\"fnPaging(" + (beginPage - 1) + ", '" + queryString + "')\">&lt;</button>");
+    // 1  2  3  4  5  6  7  8  9  10
+    // <button type="button" onclick="fnPaging(1, '&sort=DESC')" class="focus-page">1</button>
+    // <button type="button" onclick="fnPaging(2, '&sort=DESC')">2</button>
+    for(int p = beginPage; p <= endPage; p++) {
+      if(p == page) {
+        builder.append("<button type=\"button\" onclick=\"fnPaging(" + p + ", '" + queryString + "')\" class=\"focus-page\">" + p + "</button>");
+      } else {
+        builder.append("<button type=\"button\" onclick=\"fnPaging(" + p + ", '" + queryString + "')\">" + p + "</button>");
+      }
+    }
+    
+    // 다음 블록 >
+    // 1. 링크 없음 : <button type="button" class="disabled-button">&gt;</button>
+    // 2. 링크 있음 : <button type="button" onclick="fnPaging(11, '&sort=DESC')">&gt;</button>
+    if(endPage == pageCount)
+      builder.append("<button type=\"button\" class=\"disabled-button\">&gt;</button>");
+    else
+      builder.append("<button type=\"button\" onclick=\"fnPaging(" + (endPage + 1) + ", '" + queryString + "')\">&gt;</button>");
+    
+    // </div>
+    builder.append("</div>");
+    
+    return builder.toString();
+    
+  }
   
 }

@@ -22,7 +22,7 @@
      WHERE board_id = #{boardId}
   </select>
   
-  <insert id="insertBoard">
+  <insert id="insertBoard" useGeneratedKeys="true" keyProperty="boardId">
     INSERT INTO tbl_board (
       title
     , contents

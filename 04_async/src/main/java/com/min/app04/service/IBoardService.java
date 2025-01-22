@@ -15,7 +15,7 @@ public interface IBoardService {
   BoardDto getBoardById(int boardId);
   
   // 등록 서비스
-  Map<String, String> registBoard(BoardDto boardDto);
+  Map<String, Object> registBoard(BoardDto boardDto);
   
   // 수정 서비스
   Map<String, String> modifyBoard(BoardDto boardDto);

@@ -54,14 +54,13 @@ public class BoardServiceImpl implements IBoardService {
                                                                   "sort", sort));
     
     // 페이징 가져오기 (전달 : 현재 서비스가 동작할 주소, 정렬 방식, 목록 개수, 검색 같은 추가 파라미터들)
-    String paging = pageUtil.getPaging("/list.do", Map.of("display", display, "sort", sort));  
+    String paging = pageUtil.getAsyncPaging(Map.of("display", display, "sort", sort));
    
     // 결과 반환하기
-    return Map.of("boardList", boardList,
+    return Map.of("boardList", Map.of("board",boardList),
                   "count", count,
                   "paging", paging,
                   "offset", offset);
-    
   }
 
   @Override
@@ -70,19 +69,21 @@ public class BoardServiceImpl implements IBoardService {
   }
 
   @Override
-  public Map<String, String> registBoard(BoardDto boardDto) {
-    String mapping = null;
+  public Map<String, Object> registBoard(BoardDto boardDto) {
+    int status = 0;
     String msg = null;
     try {
       boardMapper.insertBoard(boardDto);
-      mapping = "/list.do";
+      status = 200;
       msg = "등록 성공";
     } catch (Exception e) {
       e.printStackTrace();
-      mapping = "/write.do";
+      status = 500;
       msg = "등록 실패";
     }
-    return Map.of("mapping", mapping, "msg", msg);
+    return Map.of("status", status
+                , "msg", msg
+                , "registed", boardDto);
   }
 
 @Override
