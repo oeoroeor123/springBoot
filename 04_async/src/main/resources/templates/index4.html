@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- axios 라이브러리 사용을 위한 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+ #board-list {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+ }
+ .board {
+  width: 200px;
+  height: 200px;
+  margin: 10px 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid gray;
+ }
+ .board:hover {
+  background-color: hotpink;
+ }
+</style>
+</head>
+<body>
+
+  <!-- 무한 스크롤 구현하기 -->
+  
+  <div id="board-list"></div>
+  
+  <script>
+  
+  	// 전역 변수
+  	var page = 1; // 현재 페이지 번호
+  	var pageCount = 0; // 전체 페이지 번호
+  	                   // 마지막 페이지에서는 스크롤 이벤트가 발생해도 목록 가져오지 x)
+  	                   // 그러기 위해선, 현재 페이지가 전체 페이지 개수를 넘어섰는지 체크 필요
+  	                   
+  	// 목록을 가져와서 
+  	function boardList() {
+  	  
+  	  axios.get('/list', {
+  	    params: {
+  	      'page': page
+  	    }
+  	  }).then(response => {
+  	    
+  	    /*
+        새로운 목록을 기존 화면에 추가하는 방식으로 동작시켜야 합니다.
+        document.getElementById().innerHTML = str;  (이 방식은 기존 화면을 덮어쓰기 하므로 사용하면 안 됩니다.)
+        document.getElementById().innerHTML += str; (이렇게 기존 화면에 추가하는 방식을 써야 합니다.)
+      	*/
+      	
+      	pageCount = response.data.pageCount;
+  	    response.data.boardList.forEach((b, index) => {
+  	    	let str = '';
+  	      str += `<div class="board" data-board-id="${b.boardId}">`;
+  	      str += `<p>번호 ${b.boardId}</p>`;
+  	      str += `<h1>${b.title}</h1>`;
+  	      str += `<p>${b.createDt.substring(0, 10)}</p>`;
+  	      str += `</div>`;
+  	   	document.getElementById('board-list').innerHTML += str; // 기존 화면에 board-list를 추가하는 방식
+  	    })
+  	  })
+
+  	}
+  	
+  	// 현재 스크롤의 높이(위치)를 받아 와서 스크롤이 바닥에 닿았다면,
+  	// 다음 페이지의 목록을 가져와서 화면에 표시하는 함수
+  	function getBoardList(scrollPos) {
+  	  // console.log(scrollPos, window.innerHeight, document.body.offsetHeight);
+  	  // scrollPos          : 현재 스크롤의 높이(위치)
+  	  // window.innerHeight : 윈도우(창)의 높이
+  	  // document.body.offsetHeight : 문서(본문에 표시된 목록의 내용)의 높이
+  	  if(scrollPos + window.innerHeight >= document.body.offsetHeight) { // 스크롤이 바닥에 닿은 조건 (스크롤 + 창 크기 >= 전체 크기라면, 크기가 더 커서 바닥에 닿음을 알 수 있음)
+  	    if(page > pageCount) { // 현재 페이지가 마지막 페이지인지 체크(마지막 페이지라면, 더이상 목록을 가져오면 안된다.)
+  	      return; // 마지막 페이지라면, 함수 종료
+  	    }
+  	    page++; // 마지막 페이지가 아니라면, 다음 페이지 내용이 출력된다.
+  	    boardList(); // 목록을 가져와서 화면에 나타낸다.
+  	  }
+  	}
+  	
+    let last_known_scroll_position = 0;
+    let ticking = false;
+    
+    /*
+    	스크롤 이벤트는 빠른 속도로 동작하기 때문에 
+    	스크롤 이벤트 핸들러(함수)에서는 DOM 수정 같은 느린 작업을 실행하지 않아야 한다.
+    	이 문제를 해결하기 위해서, setTimeout() 함수를 이용해서 일부러 시간을 끌고 나서 DOM 수정을 하거나
+    	requestAnimationFrame() 함수를 이용해서 브라우저가 화면을 그릴 준비가 되면 DOM 수정을 한다.
+    */
+    
+    window.addEventListener('scroll', event => { // 스크롤 이벤트
+      last_known_scroll_position = window.scrollY; // 현재 스크롤의 높이(위치)
+      if (!ticking) {
+        window.requestAnimationFrame(function () { // 브라우저가 화면을 그릴 준비가 끝나면 동작
+          getBoardList(last_known_scroll_position); // 준비가 끝나면 목록을 가져와서 화면에 나타냄
+          ticking = false; // 함수 실행 이후에는 스크롤 이벤트가 발생해도 다시 호출되지 않도록 설정 
+        });
+        ticking = true;
+      }
+    })
+    
+  	
+  	boardList();
+  </script>
+
+</body>
+</html>

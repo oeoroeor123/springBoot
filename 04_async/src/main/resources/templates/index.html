@@ -15,7 +15,9 @@
   
   <script th:inline="javascript">
   
-  
+  /* 비동기 처리 방법 1. fetch
+	*/
+	   
   // 전역 변수 (모든 함수에서 사용 가능)
   var page = 1;
   var queryString = '';
@@ -29,6 +31,16 @@
 
   // fetch를 통해 비동기 처리 (await 키워드 사용 시, async 선언 필수 !)
   async function getBoardList() {
+    
+  	/*
+  	fetch의 promise 사용법 (참고용)
+  	fetch('요청')
+  	  .then(response => response.json())
+  	  .then(jsonData => {
+  	    console.log(jsonData);
+  	  })
+  	 */
+  	
      const response = await fetch('/board/list.json?page=' + page + queryString);
      const jsonData = await response.json();
      console.log(jsonData);

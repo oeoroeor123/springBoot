@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- axios 라이브러리 사용을 위한 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+  <button type="button" id="btn1">요청1</button>
+  <script>
+  	
+  	/* 
+  		 비동기 처리 방법 2. Axios
+  		 별도의 CDN 입력 후 사용 가능
+  	*/
+  
+  	function fnAxios1() {
+  	  
+  	  // get 방식 요청
+  		const responsePromise = axios.get("/book/list");
+  	  // console.log(response);
+  		responsePromise.then((response) => {
+  		  console.log(response.config);
+  		  console.log(response.headers);
+  		  console.log(response.data); // 실제 응답 데이터
+  		  console.log(response.status); // 응답 코드
+  		  console.log(response.statusText); // 응답 코드 텍스트 값
+  		})
+  	}
+  	
+  		document.getElementById('btn1').addEventListener('click', fnAxios1);
+  </script>
+  
+  <script>
+  	function fnAxios1() {
+  	  const responsePromise = axios.get("/book/list");
+  	  responsePromise.then((response) => {
+  	    console.log(response.config);
+  	    console.log(response.headers);
+  	    console.log(response.data);
+  	    console.log(response.status);
+  	    console.log(response.statusText);
+  	  }) 
+  	}
+  	
+  	document.getElementById('btn1').addEventListener('click', fnAxios1);
+  </script>
+  
+  <hr>
+  
+  <input type="text" id="word">
+  <button type="button" id="btn2">요청2</button>
+  <script>
+  	
+  function fnAxios2() {    
+  	axios.get("/book/detail", {
+  	  // 요청 파라미터 이용
+  	  params: {
+  	    word: document.getElementById('word').value
+  	  }
+  	}).then(response => {
+  	  console.log(response.headers);
+  	  console.log(response.data);
+  	  console.log(response.status);  	  
+  	})
+  }
+  
+  	document.getElementById('btn2').addEventListener('click', fnAxios2);
+  </script>
+  
+  
+  <hr/>
+  
+  <input type="text" id="title" placeholder="제목">
+  <input type="text" id="author" placeholder="저자">
+  <button type="button" id="btn3">요청3</button>
+  <script>
+  	
+  	function fnAsiox3() {
+  	  
+  	  const data = {
+  	      title: document.getElementById('title').value,
+  	      author: document.getElementById('author').value
+  	    }
+  	  
+ 	    // 요청 본문(body)에 데이터 보내기 (GET 방식은 불가함)
+  	  axios.post('/book/regist', data)
+  	       	.then(response => {
+  	         console.log(response.data); // 성공 시, 데이터 불러오기
+  	       	})
+  	       	.catch(error => {
+  	       	  console.log(error.response.data); // 실패 시,오류 메시지만 출력해보기
+  	       	})
+  	}
+  	
+  	document.getElementById('btn3').addEventListener('click', fnAsiox3);
+  </script>
+  
+</body>
+</html>
