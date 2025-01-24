@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.min.app05.mapper.IUserMapper">
+  
+  <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+    INSERT INTO tbl_user (
+        email
+      , pwd
+      , nickname
+      , create_dt
+    ) VALUES (
+        #{email}
+      , #{pwd}
+      , #{nickname}
+      , #{createDt}
+    )
+  </insert>
+  
+  <update id="updateUser">
+    UPDATE tbl_user
+       SET pwd = #{pwd}
+         , nickname = #{nickname}
+     WHERE user_id = #{userId}
+  </update>
+  
+  <delete id="deleteUser">
+    DELETE
+      FROM tbl_user
+     WHERE user_id = #{userId}
+  </delete>
+  
+  <select id="selectUserCount" resultType="int">
+    SELECT COUNT(*)
+      FROM tbl_user
+  </select>
+  
+  <select id="selectUserList" resultType="UserDto">
+    SELECT user_id, email, pwd, nickname, create_dt
+      FROM tbl_user
+     ORDER BY user_id ${sort}
+     LIMIT #{offset}, #{display}
+  </select>
+  
+  <select id="selectUserById" resultType="UserDto">
+    SELECT user_id, email, pwd, nickname, create_dt
+      FROM tbl_user
+     WHERE user_id = #{userId}
+  </select>
+  
+</mapper>
