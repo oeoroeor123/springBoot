@@ -1,0 +1,21 @@
+Swagger 문서화하기
+
+1)
+http://localhost:8080/swagger-ui/index.html
+페이지에서
+대제목 아래 링크 클릭
+
+2)
+http://localhost:8080/v3/api-docs
+클릭해서 연결된 페이지
+다름이름으로 저장(json파일 체크!)
+
+3)
+https://editor.swagger.io/
+편집 페이지에서
+file > import file > 저장한 josn 파일 선택
+
+4) 
+선택된 파일 연 상태로
+generate client > html2 선택 > 압축 풀기 > index.html으로 문서 확인 !
+압축 파일명 : html2-client-generated

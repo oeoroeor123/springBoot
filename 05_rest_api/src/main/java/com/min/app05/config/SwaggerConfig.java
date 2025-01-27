@@ -1,4 +1,4 @@
-package config;
+package com.min.app05.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +13,7 @@ public class SwaggerConfig {
   /*
    * Swagger UI (API 문서화, 테스트 기능 등을 제공)
    * http://localhost:8080/swagger-ui/index.html
+   * 
    * 1. OpenAPI Specification의 이전 이름
    * 2. 초기 Swagger는 API를 설계하고 빌드하고 문서화하는데 사용되었음
    * 3. 현재 Swagger는 API 문서화, 테스트 기능 등을 제공하면서 API 개발자들의 생산성 향상에 도움을 줌
@@ -22,6 +23,17 @@ public class SwaggerConfig {
   
   @Bean
   OpenAPI openAPI() {
+
+    /*
+     * Info 
+     *   Swagger UI 상단에 표시되는 정보
+     * 
+     * title       : 문서 제목
+     * description : 문서에 대한 설명
+     * version     : 문서 버전
+     * contact     : 문서 작성자에 대한 정보
+     * license     : 문서 라이센스에 대한 정보
+     */
     
     
     final Info info = new Info().title("Spring Boot REST API")
