@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <div class="wrap">
+  <h1>회원 관리 프로그램</h1>
+  <div>
+  <label for="memId">회원 번호</label>
+  <input type="text" id="memId" readonly="readonly">
+  </div>
+  <div>
+  <label for="memEmail">이메일</label>
+  <input type="text" id="memEmail">
+  </div>
+  <div>
+  <label for="memName">이름</label>
+  <input type="text" id="memName">
+  <div>
+      <label for="none">선택안함</label>
+      <input type="radio" id="none" name="gender" value="N" checked="checked">
+      <label for="man">남자</label>
+      <input type="radio" id="man" name="gender" value="M">
+      <label for="woman">여자</label>
+      <input type="radio" id="woman" name="gender" value="F">
+    </div>
+  <div>
+  <input type="hidden" id="addrId">
+  <input type="text" id="postcode" onclick="execDaumPostcode()" placeholder="우편번호" readonly="readonly">
+  <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+  <input type="text" id="roadAddress" placeholder="도로명주소">
+  <input type="text" id="jibunAddress" placeholder="지번주소"><br/>
+  <span id="guide" style="color:#999;display:none"></span>
+  <input type="text" id="detailAddress" placeholder="상세주소">
+  <input type="text" id="extraAddress" placeholder="참고항목"><br/>
+  <input type="text" id="addrName" placeholder="주소이름" value="집"> 
+  
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    // 본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                  extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                 extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraRoadAddr !== ''){
+                  extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
+                
+                // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                if(roadAddr !== ''){
+                  document.getElementById("extraAddress").value = extraRoadAddr;
+                } else {
+                 	 document.getElementById("extraAddress").value = '';
+                }
+
+                var guideTextBox = document.getElementById("guide");
+                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                if(data.autoRoadAddress) {
+                   var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                    guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                    guideTextBox.style.display = 'block';
+
+                } else if(data.autoJibunAddress) {
+                   var expJibunAddr = data.autoJibunAddress;
+                    guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                    guideTextBox.style.display = 'block';
+                } else {
+                    guideTextBox.innerHTML = '';
+                    guideTextBox.style.display = 'none';
+                }
+            }
+        }).open();
+    }
+</script>
+  </div>
+  </div>
+  <div>
+    <button type="button" id="btn-init" onclick="init()">초기화</button>
+    <button type="button" id="btn-regist">등록</button>
+    <button type="button" id="btn-modify">수정</button>
+    <button type="button" id="btn-remove">삭제</button>
+  </div>
+  
+  <hr/>
+  
+  <div>
+    <div id="count"></div>
+    <div>
+      <button type="button" id="btn-select-remove">선택삭제</button>
+      <select id="display" onclick="changeDisplay()">
+        <option>20</option>
+        <option>50</option>
+        <option>100</option>
+      </select>
+    </div>
+    <table border="1">
+    <thead>
+     <tr>
+        <td>선택</td>
+        <td>이메일</td>
+        <td>이름</td>
+        <td>성별</td>
+        <td>버튼</td>
+     </tr>
+    </thead>
+    <tbody id="members"></tbody>
+     <tfoot>
+       <tr>
+        <td colspan="5" id="paging"></td>
+       </tr>
+     </tfoot>
+    </table>
+  </div>
+
+  <script>
+  
+  	var page = 1;
+  	var display = 20;
+  	var queryString = `&display=${display}`;
+  	
+  	const inpMemId = document.getElementById('memId');
+    const inpMemEmail = document.getElementById('memEmail');
+    const inpMemName = document.getElementById('memName');
+    const inpMemGender = document.getElementById('memGender');
+    
+    const inpAddrId = document.getElementById('addrId');
+    const inpPostcode = document.getElementById('postcode');
+    const inpRoadAddress = document.getElementById('roadAddress');
+    const inpJibunAddress = document.getElementById('jibunAddress');
+    const inpDetailAddress = document.getElementById('detailAddress');
+    const inpExtraAddress = document.getElementById('extraAddress');
+    const inpAddrName = document.getElementById('addrName');
+    const selDisplay = document.getElementById('display');
+    const btnRegist = document.getElementById('btn-regist');
+    const btnModify = document.getElementById('btn-modify');
+    const btnRemove = document.getElementById('btn-remove');
+    const btnSelectRemove = document.getElementById('btn-select-remove');
+
+  	// 초기화 기능
+  	function init() {
+  	    inpMemId.value = '';
+  	    inpMemEmail.value = '';
+  	    inpMemName.readOnly = false;
+  	    inpMemName.value = '';
+  	    document.querySelector(`input[name=gender][value=N]`).checked = true;
+  	    
+  	    inpAddrId.value = '0';
+  	    inpPostcode.value = '';
+  	    inpRoadAddress.value = '';
+  	    inpJibunAddress.value = '';
+  	    inpDetailAddress.value = '';
+  	    inpExtraAddress.value = '';
+  	    inpAddrNamevalue = '집';
+  	    selDisplay.value = 20;
+  	    // 초기 페이지에서, 등록 버튼 활성화 & 수정 및 삭제 버튼 비활성화
+  	    btnRegist.disabled = false;
+  	    btnModify.disabled = true;
+  	    btnRemove.disabled = true;
+  	}
+  	
+  	function fnPaging(p, qs) {
+  	  page = p;
+  	  queryString = qs;
+  	  getMembers();
+  	}
+  
+  	function getMembers() {
+  	  fetch(`/members?page=${page}${queryString}`)
+  	   .then(response => response.json())
+  	   .then(jsonData => {
+  	     document.getElementById('count').innerHTML = `총 회원 수 ${jsonData.results.count}명`;
+  	     document.getElementById('paging').innerHTML = jsonData.results.paging;
+  	     const members = document.getElementById('members');
+  	     // 기존 목록을 초기화
+  	     members.innerHTML = '';
+  	     
+  	     // 새 목록을 반복문으로 만들어서 보여줘라
+  	     jsonData.results.memberList.forEach((m, index) => {
+  	     let str = '<tr>';
+  	     // 체크 박스마다 회원 번호 넣어두기
+  	     str += `<td><input type="checkbox" class="chk-member" value="${m.memId}"></td>`;
+  	     str += `<td>${m.memEmail}</td>`;
+  	     str += `<td>${m.memName}</td>`;
+  	     str += `<td>${m.memGender}</td>`;
+  	     str += `<td><button type="button" class="btn-detail" onclick="getMemberById(${m.memId})">조회</button></td>`;
+  	     str += '</tr>';
+  	     members.innerHTML += str;
+  	     }) 	     
+  	   })
+  	}
+  	
+  	function changeDisplay() {
+  	  // 디스플레이 값이 변하면 page도 1로 변경
+  	  page = 1;
+  	  display = document.getElementById('display').value;
+  	  queryString = `&display=${display}`;
+  	  getMembers();
+  	}
+  	
+  	// 상세보기 기능
+  	function getMemberById(memId) {
+  	      fetch(`/members/${memId}`)
+  	   			.then(response => response.json())
+  	   			.then(jsonData => {
+  	   			  // 회원 정보
+  	   			  const member = jsonData.results.member;
+  	   			  // 주소 정보
+  	   			  const address = jsonData.results.address;
+  	   			  inpMemId.value = member.memId;
+  	   			  // 이메일 값 가져오기
+  	   			  inpMemEmail.value = member.memEmail;
+  	   			  // 이메일 수정 불가 처리
+  	   			  inpMemEmail.readOnly = true;
+  	   			  inpMemName.value = member.memName;
+  	   			  document.querySelector(`input[name=gender][value=${member.memGender}]`).checked = true;
+  	   			  
+  	   			  inpAddrId.value = address.addrId;
+  	   			  inpPostcode.value = address.postcode;
+  	   			  inpRoadAddress.value = address.roadAddress;
+  	   			  inpJibunAddress.value = address.jibunAddress;
+  	   			  inpDetailAddress.value = address.detailAddress;
+  	   			  inpExtraAddress.value = address.extraAddress;
+  	   			  inpAddrName.value = address.addrName;
+  	   			  // 조회 시, 등록 버튼 비활성화 & 수정 및 삭제 버튼 활성화
+  	   		 	  btnRegist.disabled = true;
+  	   		 	  btnModify.disabled = false;
+  	   		   	btnRemove.disabled = false;
+  	   			})
+  	}
+  	
+  	 function registMember() {
+       btnRegist.addEventListener('click', event => {
+         const options = {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             memEmail: inpMemEmail.value,
+             memName: inpMemName.value,
+             memGender: document.querySelector('input[type=radio]:checked').value,
+             postcode: inpPostcode.value,
+             roadAddress: inpRoadAddress.value,
+             jibunAddress: inpJibunAddress.value,
+             detailAddress: inpDetailAddress.value,
+             extraAddress: inpExtraAddress.value,
+             addrName: inpAddrName.value
+           })
+         }
+         fetch('/members', options)
+           .then(response => response.json())
+           .then(jsonData => {
+             if(jsonData.status === 200) {
+               alert(jsonData.message);
+               page = 1;
+               display = 20;
+               queryString = `&display=${display}`;
+               init();
+               getMembers();
+             }
+           })
+       })
+     }
+  	 
+  	 function modifyMember() {
+  	   btnModify.addEventListener('click', event => {
+         const options = {
+           method: 'PUT',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             memName: inpMemName.value,
+             memGender: document.querySelector('input[type=radio]:checked').value,
+             addrId: Number(inpAddrId.value),
+             postcode: inpPostcode.value,
+             roadAddress: inpRoadAddress.value,
+             jibunAddress: inpJibunAddress.value,
+             detailAddress: inpDetailAddress.value,
+             extraAddress: inpExtraAddress.value,
+             addrName: inpAddrName.value
+           })
+         }
+         fetch(`/members/${inpMemId.value}`, options)
+           .then(response => response.json())
+           .then(jsonData => {
+             if(jsonData.status === 200) {
+               alert(jsonData.message);
+               getMembers();
+             }
+           })
+       })
+  	 }
+  	 
+  	 function removeMember() {
+  	   btnRemove.addEventListener('click', event => {
+  	     if(!confirm('회원 정보를 삭제할까요?')) {
+  	       return;
+  	     }
+  	     fetch(`/members/${inpMemId.value}`, {method: 'DELETE'})
+  	     .then(response => response.json())
+  	     .then(jsonData => {
+  	       if(jsonData.status === 200) {
+  	         alert(jsonData.message);
+  	         page = 1;
+             display = 20;
+             queryString = `&display=${display}`;
+             init();
+             getMembers();
+  	       }
+  	     })
+  	   })
+  	 }
+  	 
+  	 function removeSelectMember() {
+  	   btnSelectRemove.addEventListener('click', event => {
+  	     // 체크된 체크박스의 value를 배열에 저장하기
+  	     let arr = [];
+  	     document.querySelectorAll('.chk-member').forEach(chk => {
+  	       if(chk.checked) {
+  	         arr.push(chk.value);
+  	       }
+  	     })
+  	     // 체크된 체크박스가 없으면 함수 종료
+  	     if(arr.length === 0) {
+  	       alert('선택된 회원이 없습니다.');
+  	       return;
+  	     }
+  	     if(!confirm('선택한 회원 정보를 삭제할까요?')) {
+  	       return;
+  	     }
+  	     fetch(`/members/${arr.join(',')}`, { method: 'DELETE' })
+         .then(response => response.json())
+         .then(jsonData => {
+           if(jsonData.status === 200) {
+             alert(jsonData.message);
+             page = 1;
+             display = 20;
+             queryString = `&display=${display}`;
+             init();
+             getMembers();
+  	     	  }
+  	     	})
+  	   })
+  	 }
+  	 
+  	
+  	init();
+  	getMembers();
+  	registMember();
+  	modifyMember();
+  	removeMember();
+  	removeSelectMember();
+  	
+  </script>
+  </div>
+</body>
+</html>

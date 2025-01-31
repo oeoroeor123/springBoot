@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.min.app06.mapper.IMemberMapper">
+  
+  <select id="selectMemberCount" resultType="int">
+    SELECT COUNT(*)
+      FROM tbl_member
+  </select>
+  
+  <select id="selectMemberList" resultType="MemberDto">
+    SELECT mem_id, mem_email, mem_name, mem_gender
+      FROM tbl_member
+     ORDER BY mem_id DESC
+     LIMIT #{offset}, #{display}
+  </select>
+  
+  <select id="selectMemberById" resultType="MemberDto">
+    SELECT mem_id, mem_email, mem_name, mem_gender
+      FROM tbl_member
+     WHERE mem_id = #{memId}
+  </select>
+  
+  <insert id="insertMember" useGeneratedKeys="true" keyProperty="memId"> 
+    INSERT INTO tbl_member (
+      mem_email
+    , mem_name
+    , mem_gender
+    ) VALUES (
+      #{memEmail}
+    , #{memName}
+    , #{memGender}
+    )
+  </insert>
+  
+  <insert id="insertAddress">
+    INSERT INTO tbl_address (
+      postcode
+    , road_address
+    , jibun_address
+    , detail_address
+    , extra_address
+    , mem_id
+    , addr_name
+    ) VALUES(
+      #{postcode}
+    , #{roadAddress}
+    , #{jibunAddress}
+    , #{detailAddress}
+    , #{extraAddress}
+    , #{memId}
+    , #{addrName}
+    )
+  </insert>
+  
+  <update id="updateMember">
+    UPDATE tbl_member
+       SET mem_name = #{memName}
+         , mem_gender = #{memGender}
+     WHERE mem_id = #{memId}
+  </update>
+  
+  <update id="updateAddress">
+    UPDATE tbl_address
+       SET postcode = #{postcode}
+         , road_address = #{roadAddress}
+         , jibun_address = #{jibunAddress}
+         , detail_address = #{detailAddress}
+         , extra_address = #{extraAddress}
+         , addr_name = #{addrName}
+     WHERE addr_id = #{addrId}
+  </update>
+  
+  <delete id="delectMember">
+    DELETE 
+      FROM tbl_member
+     WHERE mem_id = #{memId}
+  </delete>
+  
+  <delete id="delectSelectMember">
+    DELETE
+      FROM tbl_member
+     WHERE mem_id IN (${memIds})
+  </delete>
+  
+  <select id="selectAddressById" resultType="addrDto">
+    SELECT addr_id, postcode, road_address, jibun_address, detail_address, extra_address, mem_id, addr_name
+      FROM tbl_address
+     WHERE mem_id = #{memId}
+  </select>
+  
+  
+</mapper>
