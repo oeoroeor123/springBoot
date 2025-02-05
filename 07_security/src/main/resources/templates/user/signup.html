@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<!--  Thymeleaf와 Spring Security를 사용할 때 필요한 XML 네임스페이스를 정의 -->
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+  
+  <!-- 가입 화면 구현 -->
+  <form th:action="@{/user/signup}" method="post">
+    <div>
+      <label for="userId">아이디</label>
+      <input type="text" name="userId" id="userId">
+    </div>
+    <div>
+      <label for="userName">이름</label>
+      <input type="text" name="userName" id="userName">
+    </div>
+    <div>
+      <label for="userPassword">비밀번호</label>
+      <input type="password" name="userPassword" id="userPassword">
+    </div>
+    <div>
+      <label for="userRole">권한</label>
+      <select name="userRole" id="userRole">
+        <option value="ADMIN">관리자</option>
+        <option value="USER" selected>일반회원</option>
+      </select>
+    </div>
+    <div>
+    <button type="submit">회원 가입</button>
+    </div>
+  </form>
+  
+  <script th:inline="javascript">
+  	// message가 있으면 쓰고, 없으면 null을 쓰라는 타임리프 문법
+  	const message = /*[[${message}]]*/ null;
+  	if(message != null)
+  	  alert(message);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 인터페이스 이름으로 지정 -->
+<mapper namespace="com.min.app07.user.mapper.IUserMapper">
+
+  <insert id="insertUser">
+    INSERT INTO tbl_user (
+      user_id
+    , user_password
+    , user_name
+    , user_role
+    ) VALUES (
+      #{userId}
+    , #{userPassword}
+    , #{userName}
+    , #{userRole}
+    )
+  </insert>
+  
+  <select id="selectUserByUsername" resultType="LoginDto">
+    SELECT user_no, user_id, user_password, user_name, user_role
+      FROM tbl_user
+     WHERE user_id = #{username}
+  </select>
+</mapper>

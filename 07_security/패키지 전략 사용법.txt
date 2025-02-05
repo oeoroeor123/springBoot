@@ -1,0 +1,12 @@
+* 패키지 전략
+
+1) 각자 구성하기
+큰 틀 아래 각자의 패키지를 생성하기
+user
+ controller
+ mapper
+ service
+
+2) 공유하는 코드는 함께 사용하기
+common
+config

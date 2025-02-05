@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<!--  Thymeleaf와 Spring Security를 사용할 때 필요한 XML 네임스페이스를 정의 -->
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <!-- 로그인 화면 구현 -->
+  <form th:action="@{/auth/login}" method="post">
+    <div>
+      <label for="userId">아이디</label>
+      <input type="text" name="userId" id="userId">
+    </div>
+    <div>
+      <label for="userPassword">비밀번호</label>
+      <input type="password" name="userPassword" id="userPassword">
+    </div>
+    <div>
+    <button type="submit">로그인</button>
+    </div>
+  </form>
+  
+  <script th:inline="javascript">
+    // message가 있으면 쓰고, 없으면 null을 쓰라는 타임리프 문법
+    const message = /*[[${message}]]*/ null;
+    if(message != null)
+      alert(message);
+
+    const loginfailmessage = /*[[${param.loginfailmessage}]]*/ null;
+    if(loginfailmessage != null) {
+      alert(loginfailmessage);
+    	location.replace("/auth/login"); // 로그인 실패 시, 메시지 알럿과 함께 다시 로그인 페이지로 이동한다.
+  		// location.replace('이동경로') : 히스토리를 남기지 않고 원하는 경로로 이동하는 방식
+  		// 처음 로그인 실패 후 두번째 로그인 성공 시, 이전 페이지인 로그인 페이지로 다시 돌아오지 않도록 적절한 처리를 할 때 사용
+    }
+    </script>
+  
+
+</body>
+</html>
