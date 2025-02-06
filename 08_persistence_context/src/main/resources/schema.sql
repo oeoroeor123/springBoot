@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS db_boot8;
+
+CREATE DATABASE IF NOT EXISTS db_boot8;
+
+USE db_boot8;
