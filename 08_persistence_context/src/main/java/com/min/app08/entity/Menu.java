@@ -2,6 +2,8 @@ package com.min.app08.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -42,7 +44,7 @@ public class Menu {
    * JPA에서 해당 필드는 엔티티의 식별자를 자동으로 생성함을 명시하는 Annotation
    * 매핑된 테이블의 기본키가 생성되는 방식에 따라서 strategy 속성을 지정할수 있다.
    */
-  // 테스트를 위해 주석 처리 중!!원할때 주석 해제!!  @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql PK 키의 AUTO_INCREMENT와 동일한 형태
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql PK 키의 AUTO_INCREMENT와 동일한 형태
   
   /*
    * @Column

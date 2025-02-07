@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd ">
+  
+  <!-- JPA 설정 파일 -->
+  
+  <!-- EntityManagerFactory를 식별하기 위한 name 설정이 필요하다. -->
+  <persistence-unit name="jpa_test">
+
+    <!-- 속성 설정 -->
+    <properties>
+      
+      <!-- 데이터베이스 접속 정보 -->
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/db_boot9"/>
+      <property name="javax.persistence.jdbc.user" value="greenit"/>
+      <property name="javax.persistence.jdbc.password" value="greenit"/>
+      
+      <!-- hibernate 설정 정보-->
+      <!-- hibernate.show_sql : hibernate가 실행한 sql 쿼리문을 콘솔에 출력 -->
+      <!-- hibernate.format_sql : 출력되는 sql 쿼리를 포맷하여 보기 좋게 출력 -->
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      
+      <!-- 
+        hibernate.hbm2ddl.auto : hibernate가 엔티티 클래스와 매핑된 테이블을 자동으로 생성, 수정, 삭제해주는 속성
+        create : 실행할 때 마다 테이블 자동 생성 (기존 테이블은 삭제 ex_drop table if exists tlb_user)
+        update : 기존의 테이블을 수정
+        validate : 엔티티와 테이블의 일치 여부 검증
+       -->
+      <property name="hibernate.hbm2ddl.auto" value="create"/>
+      
+    </properties>
+  
+  </persistence-unit>
+</persistence>

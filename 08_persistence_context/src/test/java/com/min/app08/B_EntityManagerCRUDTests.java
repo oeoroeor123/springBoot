@@ -107,13 +107,12 @@ class B_EntityManagerCRUDTests {
 	   // 존재하는지 테스트
 	   Assertions.assertThat(foundMenu).isNotNull();
 	   // Assertions.assertThat(foundMenu.getMenuName()).isEqualTo("시그니처 초콜렛");
-	   
 	  }
 	 
 	  @Test
 	  void update_test() {
 	    
-	    // update는 따로 도는 코드가 없고 새롭게 지정하는 형태
+	    // update는 따로 도는 코드가 없고 엔티티를 변경함
 	    
 	    // 수정하고자 하는 엔티티를 조회
 	    int menuCode = 1;
@@ -127,13 +126,14 @@ class B_EntityManagerCRUDTests {
 	    
 	    // 수정할 내용 선언 (메뉴 이름)
 	    String menuName = "물김치라떼";
-	    
+
 	    try {
 	      // Dirty Checking
 	      // 연속성 컨텍스트에 저장된 엔티티 상태가 변경되면, 커밋 시점에 자동으로 해당 변경 내용이 관계형 데이터베이스에 반영되는 것을 의미
 	      // 정리) 영속 상태인 엔티티가 커밋 시점에 관계형 데이터베이스에 적용된다.
-	      // 수정 코드가 따로 없이 변경 내용을 새롭게 저장함 (setMenuName();)
-	      // 최초 변경 후 같은 내용으로 다시 MenuName을 지정하면 중복값으로 setter가 돌지 않음
+	      // 수정 코드가 따로 없이 setter 호출로 변경 내용을 새롭게 저장함 (setMenuName();)
+	      // 최초 변경 후 같은 내용으로 다시 MenuName을 변경하면 변경된 내용이 있을 경우에만 동작하는 Dirty Checking 특징에 따라 setter가 돌지 않음 (변경 안됨)
+	      // 내용 수정 위치
 	      foundMenu.setMenuName(menuName);
 	      
 	      // 커밋 (엔티티의 변경 사항이 관계형 데이터베이스에 반영된다.)
@@ -149,8 +149,7 @@ class B_EntityManagerCRUDTests {
       }
 	    
 	    // 수정된 내용 확인하기
-	    Assertions.assertThat(entityManager.find(Menu.class, menuCode).getMenuName()).isEqualTo(menuName);
-	        
+	    Assertions.assertThat(entityManager.find(Menu.class, menuCode).getMenuName()).isEqualTo(menuName);  
 	  }
 	  
 	   @Test

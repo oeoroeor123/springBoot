@@ -203,7 +203,7 @@ class C_EntityLifeCycleTests {
     newMenu.setOrderableStatus("Y");
     newMenu.setCategoryCode(7);
     
-    // 영속성 컨텍스트에 엔티티 추가 (insert가 돌지 않음)
+    // 영속성 컨텍스트에 새로만든 newMenu 엔티티를 옮겨 넣음 (insert가 돌지 않음)
     /*
                       영속                                       비영속
     ┌---------- Persistence Context ----------┐   ┌---------- new/transient ----------┐  
@@ -246,7 +246,7 @@ class C_EntityLifeCycleTests {
     newMenu.setOrderableStatus("Y");
     newMenu.setCategoryCode(7);
     
-    // 영속성 컨텍스트에 엔티티 저장 (insert가 돌지 않음)
+    // 영속성 컨텍스트에 엔티티를 옮겨 넣음 (insert가 돌지 않음)
     /*
                      영속                                       비영속
     ┌---------- Persistence Context ----------┐   ┌---------- new/transient ----------┐  
@@ -287,5 +287,207 @@ class C_EntityLifeCycleTests {
     Assertions.assertThat(newMenu.getMenuName()).isEqualTo("우럭마카롱");
     Assertions.assertThat(foundMenu.getMenuName()).isEqualTo("우럭마카롱");
   }
+  
+  @Test
+  void 준영속_detach_test() {
+    
+    /* 준영속
+     * 영속성 컨텍스트에서 보관 중이던 엔티티를 분리해서 보관하는 상태를 의미
+     * detach() 메소드를 이용해서 준영속 상태로 만들 수 있다.
+     */
+    
+    
+    // 일단, 영속성 컨텍스트에서 menuCode가 20과 21인 엔티티를 조회한다.
+    // 현재, 영속성 컨텍스트에 엔티티가 없으므로 관계형 데이터베이스에서 SELECT를 한다.
+    // SELECT 결과는 영속성 컨텍스트에 저장한다.
+    Menu foundMenu1 = entityManager.find(Menu.class, 20);
+    Menu foundMenu2 = entityManager.find(Menu.class, 21);
+    
+    // foundMenu1을 준영속 상태로 변경한다.
+    // 이제 foundMenu1은 영속성 컨텍스트에 존재하지 않는다.
+    entityManager.detach(foundMenu1);
+    
+    // 준영속 상태의 엔티티를 수정한다.
+    foundMenu1.setMenuName("앙버터초무침");
+    
+    // 영속 상태의 엔티티를 수정한다.
+    foundMenu2.setMenuName("홍어회스크류바");
+    
+    // find() : menuCode 20번은 영속성 컨텍스트에 없는 준영속 엔티티이기 때문에 관계형 데이터베이스에서 SELECT 한다.
+    // 테스트 실패 (관계형 데이터베이스에서 조회하여 가져오기 때문에, MenuName 수정 불가 !)
+    Assertions.assertThat(entityManager.find(Menu.class, 20).getMenuName()).isEqualTo("앙버터초무침");
+    
+    // find() : menuCode 21번은 영속성 컨텍스트에 있는 영속성 엔티티이기 때문에 해당 엔티티를 가져온다.
+    // 테스트 성공
+    Assertions.assertThat(entityManager.find(Menu.class, 21).getMenuName()).isEqualTo("홍어회스크류바");    
+  }
+  
+  @Test
+  void 준영속_clear_test() {
+    
+    // 일단, 영속성 컨텍스트에서 menuCode가 20과 21인 엔티티를 조회한다.
+    // 현재, 영속성 컨텍스트에 엔티티가 없으므로 관계형 데이터베이스에서 SELECT를 한다.
+    // SELECT 결과는 영속성 컨텍스트에 저장한다.
+    Menu foundMenu1 = entityManager.find(Menu.class, 20);
+    Menu foundMenu2 = entityManager.find(Menu.class, 21);
+    
+    // clear() : 영속성 컨텍스트를 초기화하는 메소드(일괄적으로 영속 엔티티들을 모두 준영속 상태로 만든다.)
+    // foundMenu1, foundMenu2가 모두 준영속 상태가 된다.
+    entityManager.clear();
+    
+    // 준영속 상태의 엔티티를 수정한다.
+    foundMenu1.setMenuName("앙버터초무침");
+    foundMenu2.setMenuName("홍어회스크류바");
+    
+    // 영속성 컨텍스트에 menuCode가 20, 21인 엔티티가 없으므로 모두 관계형 데이터베이스에서 SELECT 한다.
+    // 모든 테스트 실패
+    Assertions.assertThat(entityManager.find(Menu.class, 20)).isEqualTo("앙버터초무침");
+    Assertions.assertThat(entityManager.find(Menu.class, 21)).isEqualTo("홍어회스크류바");
+  }
+  
+  @Test
+  void 준영속_close_test() {
+    
+    Menu foundMenu1 = entityManager.find(Menu.class, 20);
+    Menu foundMenu2 = entityManager.find(Menu.class, 21);
+    
+    // close() : 영속성 컨텍스트를 종료한다. 엔티티매니저를 다시 생성해야만 영속성 컨텍스트를 다시 사용할 수 있다.
+    // 엔티티매니저 생성 이전에는 IllegalStateException 예외가 발생한다.
+    // 영속성 컨텍스트가 종료되어 더이상 사용할 수 없다.
+    entityManager.close();
+
+    // 준영속 상태의 엔티티를 수정한다.
+    foundMenu1.setMenuName("앙버터초무침");
+    foundMenu2.setMenuName("홍어회스크류바");
+    
+    // find() : 메소드 동작 시 영속성 컨텍스트에 가장 먼저 접근하는데,
+    // 현재 영속성 컨텍스트가 닫힌 상태이므로 IllegalStateException 예외가 발생한다.
+    Assertions.assertThat(entityManager.find(Menu.class, 20)).isEqualTo("앙버터초무침");
+    Assertions.assertThat(entityManager.find(Menu.class, 21)).isEqualTo("홍어회스크류바");
+  }
+  
+  @Test
+  void 준영속_merge_test() {
+    
+    // menuCode 1인 엔티티는 영속성 컨텍스트에 없음으로 DB에서 SELECT해와서 영속성 컨텍스트에 저장한다.
+    int menuCode = 1;
+    Menu foundMenu = entityManager.find(Menu.class, menuCode);
+    
+    // detach() : foundMenu를 영속 > 준영속 엔티티로 변경
+    entityManager.detach(foundMenu);
+    
+    // 준영속 상태에 있는 foundMenu 엔티티를 영속성 컨텍스트에 반환한다.
+    // mergedMenu는 영속 상태이고, foundMenu는 준영속 상태이다.
+    Menu mergedMenu = entityManager.merge(foundMenu);
+    
+    // foundMenu == margedMenu 는 서로 다른 객체임으로 테스트 실패
+    Assertions.assertThat(foundMenu == mergedMenu).isTrue();
+    
+    // menuCode 1인 엔티티를 영속성 컨텍스트에서 조회한다.
+    // 조회 결과, mergedMenu 엔티티가 존재하여 해당 엔티티를 반환한다.
+    // entityManager.find(Menu.class, menuCode) == mergedMenu
+    Assertions.assertThat(entityManager.find(Menu.class, menuCode) == mergedMenu).isTrue();
+  }
+  
+  @Test
+  void 준영속_merge_update_test() {
+    
+    // menuCode 1인 엔티티는 영속성 컨텍스트에 없음으로 DB에서 SELECT해와서 영속성 컨텍스트에 저장한다.(영속 엔티티)
+    // 영속성 컨텍스트의 "1차 캐시"에 foundMenu 엔티티의 정보(@Id, Entity, Snapshot)가 저장된다.
+    int menuCode = 1;
+    Menu foundMenu = entityManager.find(Menu.class, menuCode);
+    
+    // foundMenu를 영속 > 준영속 엔티티로 변경
+    entityManager.detach(foundMenu);
+    
+    // 준영속 상태의 foundMenu 엔티티 내용을 수정
+    foundMenu.setMenuName("까나리아메리카노");
+    
+    // merge() 메소드 동작 순서
+    // 1. foundMenu 엔티티의 @Id(menuCode = 1) 값으로 영속성 컨텍스트의 "1차 캐시"에서 엔티티를 조회한다.
+    //    "1차 캐시"에 없으면 DB에서 조회하고 조회 결과를 "1차 캐시"에 저장한다. DB에서 조회가 안되면, 새로운 영속 엔티티를 생성해서 반환한다.
+    // 2. foundMenu 엔티티는 영속성 컨텍스트의 "1차 캐시"에서 조회가 된다. (현재 준영속 엔티티이지만, 영속성 컨텍스트의 1차 캐시에 내용이 남겨져있다.)
+    // 3. 영속성 컨텍스트에 넣어져있던 당시 저장된 "1차 캐시"에서 조회한 엔티티 내용과
+    //    준영속 엔티티 foundMenu의 값을 병합해 영속 엔티티를 반환한다.
+    // ** 결론은 준영속 엔티티였던 mergedMenu가 영속 엔티티로 변한다.
+    Menu mergedMenu = entityManager.merge(foundMenu);
+    
+    // entityManager.find(Menu.class, menuCode) == mergedMenu
+    // find() 를 통해 영속성 컨텍스트에서 영속 엔티티를 조회함
+    Assertions.assertThat(entityManager.find(Menu.class, menuCode).getMenuName()).isEqualTo("까나리아메리카노");
+    Assertions.assertThat(mergedMenu.getMenuName()).isEqualTo("까나리아메리카노");
+  }
+  
+  @Test
+  void 준영속_merge_insert_test() {
+    int menuCode = 1;
+    Menu foundMenu = entityManager.find(Menu.class, menuCode);
+    
+    // foundMenu 영속 > 준영속으로 변경
+    entityManager.detach(foundMenu);
+    
+    // 준영속 엔티티 내용 변경
+    foundMenu.setMenuCode(1000); // 식별자 변경
+    foundMenu.setMenuName("시레기라떼");
+    
+    // foundMenu의 menuCode = 1000을 영속성 컨텍스트의 "1차 캐시"에서 찾는다.
+    // "1차 캐시"가 없으므로 DB에서 찾는다.
+    // DB에도 없으므로, 새로운 엔티티를 생성하여 foundMenu 엔티티의 내용과 병합하여 반환한다.
+    Menu mergedMenu = entityManager.merge(foundMenu);
+    
+    // mergedMenu의 가격이 4500원이 맞는지 테스트(테스트 통과)
+    Assertions.assertThat(mergedMenu.getMenuPrice()).isEqualTo(4500);
+  }
+  
+  @Test
+  void 삭제_remove_test() {
+    
+    // remove() : 영속 상태의 엔티티를 삭제 상태의 엔티티로 변경한다.
+    
+    // menuCode가 21인 엔티티가 영속성 컨텍스트에 저장된다.
+    // "1차 캐시"에 menuCode = 21인 엔티티가 저장된다.
+    int menuCode = 21;
+    Menu foundMenu = entityManager.find(Menu.class, menuCode);
+    
+    // 영속 상태의 foundMenu 엔티티가 삭제 상태가 된다.
+    // 삭제되어도 영속성 컨텍스트에 넣어져있던 당시에 저장된 1차 캐시의 내용은 남아있다.
+    entityManager.remove(foundMenu);
+    
+    // "1차 캐시"에서 menuCode = 21인 엔티티 정보를 찾아 반환한다.
+    // 하지만 foundMenu(삭제) 엔티티와 foundMenu2 엔티티는 서로 다른 상태의 엔티티이다. 
+    Menu foundMenu2 = entityManager.find(Menu.class, menuCode);
+    
+    // 테스트 실패
+    Assertions.assertThat(foundMenu == foundMenu2).isTrue();
+  }
+  
+  @Test
+  void 삭제_persist_test() {
+    
+    /*
+     * persist()
+     * 1. 비영속 상태의 엔티티(대표적으로 new)를 영속 상태로 만든다.
+     * 2. 삭제 상태의 엔티티를 영속 상태로 만든다.
+     */
+    
+    // 영속 상태의 foundMenu 엔티티가 영속성 컨텍스트에 저장된다.
+    int menuCode = 21;
+    Menu foundMenu = entityManager.find(Menu.class, menuCode);
+    
+    // foundMenu를 영속 상태 > 삭제 상태로 변경
+    entityManager.remove(foundMenu);
+    
+    // foundMenu를 삭제 상태 > 영속 상태로 다시 변경
+    entityManager.persist(foundMenu);
+    
+    // 영속성 컨텍스트에 menuCode = 21인 엔티티가 있으므로 해당 엔티티를 반환한다.
+    Menu foundMenu2 = entityManager.find(Menu.class, menuCode);
+    
+    // foundMenu, foundMenu2는 영속 엔티티로 동일하다. (테스트 성공)
+    Assertions.assertThat(foundMenu == foundMenu2).isTrue();
+  }
+  
+  
+  
 
 }
