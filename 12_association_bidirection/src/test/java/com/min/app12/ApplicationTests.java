@@ -7,6 +7,7 @@ import javax.persistence.Persistence;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,12 @@ class ApplicationTests {
    @AfterAll
    static void closeEntityManagerFactory() throws Exception {
      entityManagerFactory.close();
+   }
+   
+   // 개별 테스트가 종료될 때 마다 '엔티티 매니저'를 소멸한다.  (테스트 메소드가 동작한 이후에 실행되는 코드)
+   @AfterEach
+   void closeEntityManager() throws Exception {
+     entityManager.close();
    }
 
 	@Test
