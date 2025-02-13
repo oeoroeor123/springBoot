@@ -1,7 +1,5 @@
 package com.min.app15.controller;
 
-
-
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.min.app15.model.dto.MenuDto;
+import com.min.app15.model.exception.MenuNotFoundException;
 import com.min.app15.model.message.ResponseMessage;
 import com.min.app15.service.MenuService;
 
@@ -29,7 +28,7 @@ public class MenuController {
   public ResponseMessage regist(@RequestBody MenuDto menuDto) {
     
     return ResponseMessage.builder()
-                  .status(200)
+                  .status(400)
                   .message("Menu 등록 성공!")
                   .results(Map.of("menu", menuService.registMenu(menuDto)))
                   .build();
@@ -51,7 +50,8 @@ public class MenuController {
   @PutMapping(value="/menu/{menuCode}", produces = "application/json")
   public ResponseMessage modify(
       @PathVariable(name = "menuCode") Integer menuCode
-    , @RequestBody MenuDto menuDto) {
+      // 여기서 발생한 예외는 exception handler가 잡아챈 후 예외 메시지를 출력한다. : throws MenuNotFoundException
+    , @RequestBody MenuDto menuDto) throws MenuNotFoundException {
     
     menuDto.setMenuCode(menuCode);
     
@@ -77,7 +77,8 @@ public class MenuController {
   */
   
   @DeleteMapping(value="/menu/{menuCode}", produces = "application/json")
-  public ResponseMessage remove(@PathVariable(name = "menuCode") Integer menuCode) {
+  //여기서 발생한 예외는 exception handler가 잡아챈 후 예외 메시지를 출력한다. : throws MenuNotFoundException
+  public ResponseMessage remove(@PathVariable(name = "menuCode") Integer menuCode) throws MenuNotFoundException {
     
     menuService.deleteMenu(menuCode);
     
@@ -89,7 +90,7 @@ public class MenuController {
   }
   
   @GetMapping(value = "/menu/{menuCode}", produces = "application/json")
-  public ResponseMessage findMenuById(@PathVariable(name = "menuCode") Integer menuCode) {
+  public ResponseMessage findMenuById(@PathVariable(name = "menuCode") Integer menuCode) throws MenuNotFoundException {
     
     return ResponseMessage.builder()
             .status(200)
@@ -151,6 +152,17 @@ public class MenuController {
            .message(menuName + "이 포함된 메뉴 조회 성공")
            .results(Map.of("menulist", menuService.findByMenuName(menuName)))
            .build();
+  }
+  
+  @GetMapping(value="/categories", produces = "application/json")
+  public ResponseMessage findCategoryList() {
+    
+    // 테스트 url : http://localhost:8080/categories
+    return ResponseMessage.builder()
+                          .status(200)
+                          .message("카테고리 목록 조회 성공")
+                          .results(Map.of("categories", menuService.findByCategoryList()))
+                          .build();
   }
   
   

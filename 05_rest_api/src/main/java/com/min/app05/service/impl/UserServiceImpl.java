@@ -32,6 +32,7 @@ public class UserServiceImpl implements IUserService {
   @Override
   public UpdateUserDto modifyUser(UpdateUserDto updateUserDto) throws Exception {
     int updatedCount = userMapper.updateUser(updateUserDto);
+    // 수정된 건수가 0 이면 회원을 찾지 못하고 예외 처리한다.
     if(updatedCount == 0)
       throw new UserNotFoundException("회원 조회 실패로 인한 회원 정보 수정 오류");
     return updateUserDto;

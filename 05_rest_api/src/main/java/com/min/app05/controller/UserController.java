@@ -48,6 +48,7 @@ public class UserController {
   
   // @Validated : 유효성 검사를 수행할 객체에 추가, 실제 유효성 검사는 해당 객체(UserDto)에서 수행한다.
   // @RequestBody : 요청 본문을 의미
+  // @ApiResponse : api 메소드에서 반환하는 여러 응답 코드에 대한 설명을 지정하는 Annotation
   @Operation(summary = "신규 회원 등록", description = "이메일, 비밀번호, 닉네임을 이용하는 신규 회원 등록 기능입니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "신규 회원 등록 성공", content = @Content(schema = @Schema(implementation = ResponseMessage.class)))
