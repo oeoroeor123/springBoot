@@ -46,9 +46,9 @@ public class BlogServiceImpl implements BlogService {
 
   @Override
   public BlogDto modifyBlog(BlogDto blogDto) {
-    Blog blog = modelMapper.map(blogDto, Blog.class);
-    blog.setTitle(blogDto.getTitle());
-    blog.setContent(blogDto.getContent());
+    Blog foundBlog = blogRepository.findById(blogDto.getId()).orElseThrow(IllegalArgumentException::new); // () -> new IllegalArgumentException()
+    foundBlog.setTitle(blogDto.getTitle());
+    foundBlog.setContent(blogDto.getContent());
     return blogDto;
   }
 
