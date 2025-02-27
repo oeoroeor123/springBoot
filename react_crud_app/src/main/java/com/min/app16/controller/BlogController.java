@@ -25,11 +25,11 @@ public class BlogController {
   
   @GetMapping(value = "/blogs", produces = "application/json")
   public ResponseMessage list(Pageable pageable) {
-    pageable = pageable.withPage(pageable.getPageNumber() - 1);
+    
     return ResponseMessage.builder()
                 .status(200)
                 .message("블로그 목록 조회 성공")
-                .results(Map.of("blogList", blogService.findBlogList(pageable)))
+                .results(blogService.findBlogList(pageable))
               .build();
   }
   
