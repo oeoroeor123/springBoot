@@ -1,0 +1,17 @@
+*OPENAI API 수업 (챗 지피티)
+https://platform.openai.com/docs/api-reference/introduction
+
+* 리눅스 명령어 방식
+리눅스에서 OPENAI 사용 시, 
+
+1. 사용 법
+1) curl -x : 방식을 정할때 사용, -x가 없을땐 get 방식이 디폴트임 + 뒤에 명령 주소
+2) 주고 받는 데이터는 모두 json 데이터 형식이다.
+3) -d : request body로 json 데이터를 받는 형식으로 gpt에서 이용한다.(주고 받는 메시지 내용의 구성은 모두 role:역할 / content:내용 로 이루어진다.)
+4) -d를 이용해 model과 message는 필수로 보내야한다.
+5) message는 배열 형식으로 보낸다. (한 메세지당 한 배열)
+
+2. spriong boot
+1) git에 발급키 삽입하지 않기 위한 작업
+프로젝트 신규 추가 후 application.priperties에 OPENAI_API_KEY = ${{OPENAI_API_KEY} 코드 추가
+프로젝트 dashboard에서 실행 - run debug configration - 프로젝트 선택 - environment - 이름과 발급 키 입력
